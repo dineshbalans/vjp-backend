@@ -6,7 +6,7 @@ export const registerCheck = async (email) => {
 };
 
 export const loginCheck = async (email) => {
-  const result = await User.findOne({ email: email }).select('+pswd');
+  const result = await User.findOne({ email: email }).select("+pswd");
   return result;
 };
 
@@ -25,8 +25,18 @@ export const getOne = async (id) => {
   return result;
 };
 
+export const getOneWP = async (id) => {
+  const result = await User.findOne({ _id: id }).select('pswd')
+  return result;
+};
+
 export const update = async (id, data) => {
-  const result = await User.updateOne({ _id: id }, data);
+  const result = await User.updateOne({ _id: id }, data, {
+    new: true,
+    runValidators: true,
+  });
+
+  console.log(id,data,result);
   return result;
 };
 

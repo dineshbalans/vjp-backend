@@ -1,11 +1,19 @@
-import Order from './../model/orderModel.js';
+import Order from "./../model/orderModel.js";
 export const add = async (data) => {
   const result = await Order.create(data);
   return result;
 };
 
 export const getAll = async () => {
-  const result = await Order.find({});
+  const result = await Order.find({})
+    .populate({
+      path: "user",
+      model: "User",
+    })
+    .populate({
+      path: "product.item",
+      model: "Item",
+    });
   return result;
 };
 

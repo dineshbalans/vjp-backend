@@ -14,7 +14,8 @@ export const CreateOrder = async (req, res, next) => {
   }
 
   let orderData = req.body;
-  const order = await add(orderData);
+
+  const order = await add(orderData);x
 
   if (order) {
     return AppSuccess(res, order, "Order created successfully", SUCCESS);
@@ -24,18 +25,18 @@ export const CreateOrder = async (req, res, next) => {
 };
 
 export const getOrder = async (req, res, next) => {
-    const { id } = req.params;
-    if (_.isEmpty(id)) {
-      return AppError(res, "Order id is required", BADREQUEST);
-    }
-    const order = await getOne(id);
-  
-    if (order) {
-      return AppSuccess(res, order, "Order successfully Send", SUCCESS);
-    } else {
-      return AppError(res, "Something went wrong", BADREQUEST);
-    }
-  };
+  const { id } = req.params;
+  if (_.isEmpty(id)) {
+    return AppError(res, "Order id is required", BADREQUEST);
+  }
+  const order = await getOne(id);
+
+  if (order) {
+    return AppSuccess(res, order, "Order successfully Send", SUCCESS);
+  } else {
+    return AppError(res, "Something went wrong", BADREQUEST);
+  }
+};
 
 //  Admin
 
@@ -61,5 +62,3 @@ export const getOrders = async (req, res, next) => {
     return AppError(res, "Something went wrong", BADREQUEST);
   }
 };
-
-

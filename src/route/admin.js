@@ -1,12 +1,10 @@
 import { Router } from "express";
-import { getDashboard } from "../controller/adminController.js";
+import { getDashboard, loginAdmin,logoutAdmin } from "../controller/adminController.js";
+import { isAuthenticatedAdminUser } from "../utils/middlewares/authenticate.js";
 const router = Router();
 
+router.route("/dashboard").get(isAuthenticatedAdminUser ,getDashboard);
+router.route("/login").post(loginAdmin);
+router.route("/logout").get(logoutAdmin);
 
-
-
-
- 
-router.route("/dashboard").get(getDashboard);
- 
 export default router;

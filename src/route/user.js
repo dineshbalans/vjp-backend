@@ -5,6 +5,7 @@ import {
   getUser,
   getUsers,
   loginUser,
+  updateEmailOrPassword,
   updateUser,
 } from "../controller/userController.js";
 
@@ -18,6 +19,10 @@ router.route("/user/delete/:id").delete(deleteUser);
 router.route("/user/register").post(CreateUser);
 router.route("/user/login").post(loginUser);
 router.route("/user/update/:id").put(updateUser);
+router.route("/user/update/:id/email-password").put(updateEmailOrPassword);
+
+
+
 router.route("/user/update/:id").put(updateUser);
 
 export default router;
