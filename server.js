@@ -9,6 +9,8 @@ const DB_URL =process.env.Database_URI;
 
 connectDatabase(DB_URL);
 
+console.log(DB_URL)
+
 const port = process.env.PORT || 3004;
 const server = app.listen(port, () => {
   console.log(
