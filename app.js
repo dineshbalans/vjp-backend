@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import { fileURLToPath } from 'url';
 import path from "path";
 import cookieParser from "cookie-parser";
-import "./src/config/index.js";
+// import "./src/config/index.js";
 import categoryRoute from "./src/route/category.js";
 import userRoute from "./src/route/user.js";
 import itemRoute from "./src/route/item.js";
@@ -16,6 +16,8 @@ const __dirname = path.dirname(__filename);
 
 
 dotenv.config({ path: path.join(__dirname, "./.env") });
+
+console.log(process.env.PORT, "env in app");
 
 const app = express();
 app.use(cors());

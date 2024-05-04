@@ -7,6 +7,9 @@ const DB_URL =process.env.Database_URI;
 
 connectDatabase(DB_URL);
 
+console.log(process.env.PORT, "env in server");
+
+
 console.log(DB_URL)
 
 const port = process.env.PORT || 3004;
