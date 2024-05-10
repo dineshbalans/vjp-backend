@@ -5,7 +5,7 @@ export const add = async (data) => {
 };
 
 export const getAll = async () => {
-  const result = await Item.find({});
+  const result = await Item.find()
   return result;
 };
 

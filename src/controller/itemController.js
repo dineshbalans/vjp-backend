@@ -4,8 +4,9 @@ import { BADREQUEST, SUCCESS } from "../utils/constants/statusCode.js";
 import AppError from "../utils/response-handlers/app-error.js";
 import { validateCreateItem } from "../utils/validator/validateItem.js";
 import { add, getAll, getOne, remove, update } from "../service/itemService.js";
-
+import Item from "../model/itemsModel.js";
 import { getOne as getCategory } from "../service/categotyService.js";
+import APIFeatures from "../utils/api/apiFeatures.js";
 
 export const CreateItem = async (req, res, next) => {
   let images = [];
@@ -27,9 +28,7 @@ export const CreateItem = async (req, res, next) => {
   }
 
   let itemData = req.body;
-
   const category = await getCategory(req.body.category);
-
   const item = await add(itemData);
 
   category[0].items.push(item);
@@ -72,14 +71,40 @@ export const updateItem = async (req, res, next) => {
   }
 };
 
+// 
 export const getItems = async (req, res, next) => {
-  const items = await getAll();
+  const resPerPage = 12;
+  let buildQuery = () => {
+    return new APIFeatures(Item.find(), req.query); //.search()
+  };
+
+  const filterdItemsCount = await buildQuery().query.countDocuments();
+
+  const totalItemsCount = await Item.countDocuments({});
+
+  let itemsCount = totalItemsCount;
+
+  if (filterdItemsCount !== totalItemsCount) {
+    itemsCount = filterdItemsCount;
+  }
+
+  const items = await buildQuery().paginate(resPerPage).query;
+
+  // const items = await getAll();
+
   if (items) {
-    return AppSuccess(res, items, "Items successfully Send", SUCCESS);
+    return AppSuccess(
+      res,
+      { itemsCount: itemsCount, resPerPage: resPerPage, items: items },
+      "Items successfully Send",
+      SUCCESS
+    );
   } else {
     return AppError(res, "Something went wrong", BADREQUEST);
   }
 };
+
+
 
 export const getItem = async (req, res, next) => {
   const { id } = req.params;

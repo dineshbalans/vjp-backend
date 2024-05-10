@@ -21,9 +21,16 @@ export const getAll = async () => {
 };
 
 export const getOne = async (id) => {
-  const result = await User.findOne({ _id: id });
+  const result = await User.findOne({ _id: id }).populate('wishList');
   return result;
 };
+
+export const getOneByEmail = async (email) => {
+  const result = await User.findOne({ email: email });
+  return result;
+};
+
+
 
 export const getOneWP = async (id) => {
   const result = await User.findOne({ _id: id }).select('pswd')

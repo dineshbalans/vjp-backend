@@ -1,7 +1,7 @@
 // sendToken.js
-export const sendToken = (res, user, message, statusCode) => {
+export const sendToken =async (res, user, message, statusCode) => {
   
-  const token = user.getJwtToken();
+  const token =await user.getJwtToken();
 
   console.log(token,'send token');
 

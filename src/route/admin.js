@@ -5,6 +5,6 @@ const router = Router();
 
 router.route("/dashboard").get(isAuthenticatedAdminUser ,getDashboard);
 router.route("/login").post(loginAdmin);
-router.route("/logout").get(logoutAdmin);
+router.route("/logout").get(isAuthenticatedAdminUser,logoutAdmin);
 
 export default router;

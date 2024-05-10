@@ -73,3 +73,22 @@ export const deleteCategory = async (req, res, next) => {
     return AppError(res, "Something went wrong", BADREQUEST);
   }
 };
+
+
+export const getCategorieswithSearch  = async (req, res, next) => {
+
+  const categories = await getAll()
+  
+  const search = await getSearchinTotal(req)
+
+  if (categories) {
+
+    return AppSuccess(res, categories, "Categories successfully Send", SUCCESS);
+
+  } else {
+
+    return AppError(res, "No categories found", NOTFOUND);
+
+  }
+  
+}

@@ -56,6 +56,9 @@ const userSchema = new mongoose.Schema({
       ref: "Item",
     },
   ],
+  resetPasswordToken: String,
+  resetPasswordTokenExpire: Date,
+
   createdAt: {
     type: Date,
     default: Date.now,
@@ -70,14 +73,13 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-userSchema.methods.getJwtToken = function () {
+userSchema.methods.getJwtToken = async function () {
   return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_TIME,
   });
 };
 
 userSchema.methods.isValidPassword = async function (enteredPassword) {
-  console.log(enteredPassword, this.pswd);
   return await bcrypt.compare(enteredPassword, this.pswd);
 };
 
@@ -87,7 +89,7 @@ userSchema.methods.getResetPasswordToken = function () {
     .createHash("sha256")
     .update(resetToken)
     .digest("hex");
-  this.resetPasswordExpire = Date.now() + 15 * 60 * 1000;
+  this.resetPasswordTokenExpire = Date.now() + 15 * 60 * 1000;
   return resetToken;
 };
 

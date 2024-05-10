@@ -34,3 +34,17 @@ export const remove = async (id) => {
   const result = await Order.deleteOne({ _id: id });
   return result;
 };
+
+
+export const getMyAllOrders = async (id) => {
+  const result = await Order.find({ user: id })
+    .populate({
+      path: "user",
+      model: "User",
+    })
+    .populate({
+      path: "product.item",
+      model: "Item",
+    });
+  return result;
+}

@@ -13,11 +13,7 @@ export const isAuthenticatedUser = async (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    console.log(decoded);
     req.user = await getOne(decoded.id);
-
-    // console.log(decoded)
-    // req.user = decoded;
 
     next();
   } catch (error) {
@@ -32,13 +28,10 @@ export const isAuthenticatedAdminUser = async (req, res, next) => {
     return AppError(res, "Login first to assess this resource", BADREQUEST);
   }
 
-  console.log(at,'at')
-
   try {
     const decoded = jwt.verify(at, process.env.JWT_SECRET);
     // req.user = decoded;
 
-    console.log(decoded, "decoded");
     next();
   } catch (error) {
     return AppError(res, "Invalid or expired token", BADREQUEST);

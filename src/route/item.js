@@ -7,6 +7,7 @@ import {
   updateItem,
 } from "../controller/itemController.js";
 import multer from "multer";
+import { isAuthenticatedAdminUser } from "../utils/middlewares/authenticate.js";
 
 const router = Router();
 
@@ -17,14 +18,22 @@ const upload = multer({
     },
     filename: function (req, file, cb) {
       cb(null, file.originalname);
-    },
+    },  
   }),
 });
 
-router.route("/item/create").post(upload.array("images"), CreateItem);
-router.route("/item/update/:id").put(upload.array("images"), updateItem);
+// Admin
+
+router
+  .route("/item/create")
+  .post(isAuthenticatedAdminUser, upload.array("images"), CreateItem);
+router
+  .route("/item/update/:id")
+  .put(isAuthenticatedAdminUser, upload.array("images"), updateItem);
+router.route("/item/delete/:id").delete(isAuthenticatedAdminUser, deleteItem);
+
+// common
 router.route("/items").get(getItems);
 router.route("/item/:id").get(getItem);
-router.route("/item/delete/:id").delete(deleteItem);
 
 export default router;

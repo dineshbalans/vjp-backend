@@ -9,12 +9,18 @@ import {
   getOne,
   getOneWP,
   loginCheck,
+  getOneByEmail,
   registerCheck,
   remove,
   update,
 } from "../service/userService.js";
+
+import { getOne as getItem } from "../service/itemService.js";
+
 import sendToken from "../utils/response-handlers/sendToken.js";
- 
+import User from "../model/userModel.js";
+import crypto from "crypto";
+
 export const CreateUser = async (req, res, next) => {
   let alreadyExists = await registerCheck(req.body.email);
 
@@ -39,7 +45,7 @@ export const CreateUser = async (req, res, next) => {
   }
 };
 
-export const loginUser = async (req, res, exit) => {
+export const loginUser = async (req, res, next) => {
   const { email, pswd } = req.body;
 
   if (_.isEmpty(email) || _.isEmpty(pswd)) {
@@ -111,50 +117,156 @@ export const deleteUser = async (req, res, next) => {
 };
 
 export const updateEmailOrPassword = async (req, res, next) => {
-  const { id } = req.params;
-  const { type,email, password, newPassword, confirmPassword } = req.body;
-  if (_.isEmpty(id)) {
-    return AppError(res, "User id is required", BADREQUEST);
-  }
+  try {
+    const user = await getOneWP(req.user._id);
+    const { type, email, pswd, newPassword, confirmPassword } = req.body;
 
-  const user = await getOneWP(id) 
+    if (!user) {
+      return AppError(res, "User Not exists", BADREQUEST);
+    }
+
+    if (type === "email") {
+      let alreadyExists = await registerCheck(req.body.email);
+      if (alreadyExists) {
+        return AppError(res, "User Email already exists", BADREQUEST);
+      }
+
+      user.email = email;
+      await user.save();
+    }
+
+    if (type === "password") {
+      if (await user.isValidPassword(pswd)) {
+        if (newPassword !== confirmPassword) {
+          return AppError(
+            res,
+            "Password and confirm password does not match",
+            BADREQUEST
+          );
+        }
+
+        user.pswd = newPassword;
+        await user.save();
+      } else {
+        return AppError(res, "Invalid Email or Password", BADREQUEST);
+      }
+    }
+
+    if (user) {
+      return AppSuccess(res, user, "User Updated successfully", SUCCESS);
+    } else {
+      return AppError(res, "Something went wrong", BADREQUEST);
+    }
+  } catch (err) {
+    return AppError(res, err.message, BADREQUEST);
+  }
+};
+
+export const forgotPassword = async (req, res, next) => {
+  const { email } = req.body;
+  if (_.isEmpty(email)) {
+    return AppError(res, "Email is required", BADREQUEST);
+  }
+  const user = await getOneByEmail(email);
 
   if (!user) {
-    return AppError(res, "User Not exists", BADREQUEST);
+    return AppError(res, "Email not found", BADREQUEST);
   }
-  if (type === "email") {
-    let alreadyExists = await registerCheck(req.body.email);
-    if (alreadyExists) {
-      return AppError(res, "User Email already exists", BADREQUEST);
+
+  const resetToken = user.getResetPasswordToken();
+  await user.save({ validateBeforeSave: false });
+
+  let BASE_URL = `${req.protocol}://${req.get("host")}`;
+
+  const resetUrl = `${BASE_URL}/user/password/reset/${resetToken}`;
+
+  try {
+    res.status(200).json({
+      success: true,
+      message: `Email sent to ${user.email} Successfully`,
+      resetUrl: resetUrl,
+    });
+  } catch (err) {
+    user.resetPasswordToken = undefined;
+    user.resetPasswordTokenExpire = undefined;
+    await user.save({ validateBeforeSave: false });
+    return AppError(res, err.message, BADREQUEST);
+  }
+
+  // sendToken(res, resetUrl, "Password reset link sent to your email", SUCCESS);
+};
+
+export const resetPassword = async (req, res, next) => {
+  if (_.isEmpty(req.params.token)) {
+    return AppError(
+      res,
+      "Password reset token is invalid or has been expired",
+      BADREQUEST
+    );
+  }
+  const resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(req.params.token)
+    .digest("hex");
+
+  const user = await User.findOne({
+    resetPasswordToken,
+    resetPasswordTokenExpire: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    return AppError(
+      res,
+      "Password reset token is invalid or has been expired",
+      BADREQUEST
+    );
+  }
+
+  if (req.body.password !== req.body.confirmPassword) {
+    return AppError(
+      res,
+      "Password and confirm password does not match",
+      BADREQUEST
+    );
+  }
+
+  user.pswd = req.body.password;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordTokenExpire = undefined;
+  await user.save({ validateBeforeSave: false });
+
+  sendToken(res, user, "Password reset successfully", SUCCESS);
+};
+
+export const wishListAddOrRemove = async (req, res, next) => {
+  try {
+    const user = await getOne(req.user._id);
+    const { productId } = req.params;
+
+    const product = await getItem(productId);
+
+    if (!product) {
+      return AppError(res, "Product not found", NOTFOUND);
     }
 
+    let alreadyIn = false;
 
-    
-    user.email = email;
+    for (let i = 0; i < user.wishList.length; i++) {
+      if (user?.wishList[i]?._id == productId) {
+        alreadyIn = true;
+        break;
+      }
+    }
+
+    if (alreadyIn) {
+      user.wishList = user.wishList.filter((wish) => wish.id !== productId);
+    } else {
+      user.wishList.push(productId);
+    }
+
     await user.save();
-  
-  }
-
-  if (type === "password") {
-    if (!(await user.isValidPassword(password))) {
-      return AppError(res, "Old password is incorrect", BADREQUEST);
-    }
-
-    if (newPassword !== confirmPassword) {
-      return AppError(
-        res,
-        "Password and confirm password does not match",
-        BADREQUEST
-      );
-    }
-
-    user.pswd = newPassword;
-    await user.save();
-  }
-
-  if (user) {
-    return AppSuccess(res, user, "User Updated successfully", SUCCESS);
-  } else {
-    return AppError(res, "Something went wrong", BADREQUEST);
+    return AppSuccess(res, user, "Wish list updated successfully", SUCCESS);
+  } catch (err) {
+    return AppError(res, err.message, BADREQUEST);
   }
 };

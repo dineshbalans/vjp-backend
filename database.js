@@ -1,8 +1,7 @@
 import mongoose from "mongoose";
 
 const connectDatabase = (uri) => {
-
-  console.log(uri)
+ 
   try {
     mongoose
       .connect(uri)

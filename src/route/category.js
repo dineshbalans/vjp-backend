@@ -6,15 +6,25 @@ import {
   getCategory,
   updateCategory,
 } from "./../controller/categoryController.js";
-import { isAuthenticatedUser } from "../utils/middlewares/authenticate.js";
+import {
+  isAuthenticatedAdminUser,
+   
+} from "../utils/middlewares/authenticate.js";
 
 const router = Router();
 
-router.route("/category/create").post(CreateCategory);
-router.route("/category/update/:id").put(updateCategory);
+// admin
 
+router.route("/category/create").post(isAuthenticatedAdminUser, CreateCategory);
+router
+  .route("/category/update/:id")
+  .put(isAuthenticatedAdminUser, updateCategory);
+router
+  .route("/category/delete/:id")
+  .delete(isAuthenticatedAdminUser, deleteCategory);
+
+// common
 router.route("/categories").get(getCategories);
 router.route("/category/:id").get(getCategory);
-router.route("/category/delete/:id").delete(deleteCategory);
 
 export default router;
