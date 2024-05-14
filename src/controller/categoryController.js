@@ -21,7 +21,7 @@ export const CreateCategory = async (req, res, next) => {
 
   if (error) {
     console.log("invalid request " + error.message);
-    return next(new AppError(res, "Something went wrong", BADREQUEST));
+    return next(new AppError("Something went wrong", BADREQUEST));
   }
 
   let categoryData = req.body;
@@ -37,30 +37,34 @@ export const CreateCategory = async (req, res, next) => {
       )
     );
   } else {
-    return next(new AppError(res, "Something went wrong", BADREQUEST));
+    return next(new AppError("Something went wrong", BADREQUEST));
   }
 };
 
 export const updateCategory = async (req, res, next) => {
   const { id } = req.params;
   if (_.isEmpty(id)) {
-    return AppError(res, "Category id is required", BADREQUEST);
+    return next(new AppError("Category id is required", BADREQUEST));
   }
 
   const category = await update(id, req.body);
   if (category) {
-    return AppSuccess(res, category, "Category Updated successfully", SUCCESS);
+    return next(
+      new AppSuccess(category, "Category Updated successfully", SUCCESS)
+    );
   } else {
-    return AppError(res, "Something went wrong", BADREQUEST);
+    return next(new AppError("Something went wrong", BADREQUEST));
   }
 };
 
 export const getCategories = async (req, res, next) => {
   const categories = await getAll();
   if (categories) {
-    return AppSuccess(res, categories, "Categories successfully Send", SUCCESS);
+    return next(
+      new AppSuccess(categories, "Categories successfully Send", SUCCESS)
+    );
   } else {
-    return AppError(res, "No categories found", NOTFOUND);
+    return next(new AppError("No categories found", NOTFOUND));
   }
 };
 
