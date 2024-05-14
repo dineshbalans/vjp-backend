@@ -36,17 +36,18 @@ export const getDashboardDetails = async (req, res, next) => {
   try {
     const categories = await getAllCategories();
 
-    return AppSuccess(
-      res,
-      {
-        categoriesCount: categories.length,
-        categories: categories,
-      },
-      "Dashboard Data successfully Send",
-      SUCCESS
+    return next(
+      new AppSuccess(
+        {
+          categoriesCount: categories.length,
+          categories: categories,
+        },
+        "Dashboard Data successfully Send",
+        SUCCESS
+      )
     );
   } catch (err) {
-    return AppError(res, "Something went wrong", BADREQUEST);
+    return next(new AppError(res, "Something went wrong", BADREQUEST));
   }
 };
 
@@ -85,7 +86,9 @@ export const getAdminProfile = async (req, res, next) => {
   const { at } = req.cookies;
 
   if (!at) {
-    return AppError(res, "Login first to assess this resource", BADREQUEST);
+    return next(
+      new AppError(res, "Login first to assess this resource", BADREQUEST)
+    );
   }
 
   try {
@@ -97,7 +100,7 @@ export const getAdminProfile = async (req, res, next) => {
       user: true,
     });
   } catch (error) {
-    return AppError(res, "Invalid or expired token", BADREQUEST);
+    return next(new AppError(res, "Invalid or expired token", BADREQUEST));
   }
 };
 
@@ -107,5 +110,5 @@ export const logoutAdmin = async (req, res, next) => {
     httpOnly: true,
   });
 
-  return AppSuccess(res, { user: false }, "Logout successfully", SUCCESS);
+  return next(new AppSuccess(res, { user: false }, "Logout successfully", SUCCESS));
 };
