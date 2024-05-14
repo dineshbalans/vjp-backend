@@ -21,7 +21,7 @@ export const CreateCategory = async (req, res, next) => {
 
   if (error) {
     console.log("invalid request " + error.message);
-    return AppError(res, "Something went wrong", BADREQUEST);
+    return next(new AppError(res, "Something went wrong", BADREQUEST));
   }
 
   let categoryData = req.body;
@@ -29,14 +29,15 @@ export const CreateCategory = async (req, res, next) => {
   const categories = await getAll();
 
   if (category) {
-    return AppSuccess(
-      res,
-      { category, categories },
-      "Category created successfully",
-      SUCCESS
+    return next(
+      new AppSuccess(
+        { category, categories },
+        "Category created successfully",
+        SUCCESS
+      )
     );
   } else {
-    return AppError(res, "Something went wrong", BADREQUEST);
+    return next(new AppError(res, "Something went wrong", BADREQUEST));
   }
 };
 
@@ -110,4 +111,4 @@ export const getCategoriesNames = async (req, res, next) => {
   } else {
     return AppError(res, "No categories found", NOTFOUND);
   }
-}
+};
