@@ -3,6 +3,7 @@ import {
   CreateCategory,
   deleteCategory,
   getCategories,
+  getCategoriesNames,
   getCategory,
   updateCategory,
 } from "./../controller/categoryController.js";
@@ -16,6 +17,8 @@ const router = Router();
 // admin
 
 router.route("/category/create").post(isAuthenticatedAdminUser, CreateCategory);
+router.route("/categories/list").get(isAuthenticatedAdminUser, getCategoriesNames);
+
 router
   .route("/category/update/:id")
   .put(isAuthenticatedAdminUser, updateCategory);

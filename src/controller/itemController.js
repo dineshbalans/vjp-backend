@@ -35,7 +35,7 @@ export const CreateItem = async (req, res, next) => {
   await category[0].save();
 
   if (item) {
-    return AppSuccess(res, item, "Item created successfully", SUCCESS);
+    return AppSuccess(res, category, "Item created successfully", SUCCESS);
   } else {
     return AppError(res, "Something went wrong", BADREQUEST);
   }

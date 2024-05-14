@@ -49,6 +49,7 @@ export const getDashboardDetails = async (req, res, next) => {
 // Auth
 
 export const loginAdmin = async (req, res, next) => {
+  console.log('coming')
   const { username, password } = req.body;
 
   if (_.isEmpty(username) || _.isEmpty(password)) {

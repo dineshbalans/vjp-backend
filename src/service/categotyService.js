@@ -8,6 +8,10 @@ export const getAll = async () => {
   const result = await Category.find({}).populate('items');
   return result;
 };
+export const getAllName = async () => {
+  const result = await Category.find({});
+  return result;
+};
 
 export const getOne = async (id) => {
   const result = await Category.find({ _id: id });

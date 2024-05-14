@@ -1,7 +1,18 @@
 import _ from "lodash";
-import { add, getAll, getOne, remove, update } from "../service/categotyService.js";
+import {
+  add,
+  getAll,
+  getAllName,
+  getOne,
+  remove,
+  update,
+} from "../service/categotyService.js";
 import AppSuccess from "../utils/response-handlers/app-success.js";
-import { BADREQUEST, NOTFOUND, SUCCESS } from "../utils/constants/statusCode.js";
+import {
+  BADREQUEST,
+  NOTFOUND,
+  SUCCESS,
+} from "../utils/constants/statusCode.js";
 import AppError from "../utils/response-handlers/app-error.js";
 import { validateCreateCategory } from "./../utils/validator/validateCategory.js";
 
@@ -15,9 +26,15 @@ export const CreateCategory = async (req, res, next) => {
 
   let categoryData = req.body;
   const category = await add(categoryData);
+  const categories = await getAll();
 
   if (category) {
-    return AppSuccess(res, category, "Category created successfully", SUCCESS);
+    return AppSuccess(
+      res,
+      { category, categories },
+      "Category created successfully",
+      SUCCESS
+    );
   } else {
     return AppError(res, "Something went wrong", BADREQUEST);
   }
@@ -38,7 +55,7 @@ export const updateCategory = async (req, res, next) => {
 };
 
 export const getCategories = async (req, res, next) => {
-  const categories = await getAll()
+  const categories = await getAll();
   if (categories) {
     return AppSuccess(res, categories, "Categories successfully Send", SUCCESS);
   } else {
@@ -74,21 +91,23 @@ export const deleteCategory = async (req, res, next) => {
   }
 };
 
+export const getCategorieswithSearch = async (req, res, next) => {
+  const categories = await getAll();
 
-export const getCategorieswithSearch  = async (req, res, next) => {
-
-  const categories = await getAll()
-  
-  const search = await getSearchinTotal(req)
+  const search = await getSearchinTotal(req);
 
   if (categories) {
-
     return AppSuccess(res, categories, "Categories successfully Send", SUCCESS);
-
   } else {
-
     return AppError(res, "No categories found", NOTFOUND);
-
   }
-  
+};
+
+export const getCategoriesNames = async (req, res, next) => {
+  const categories = await getAllName();
+  if (categories) {
+    return AppSuccess(res, categories, "Categories successfully Send", SUCCESS);
+  } else {
+    return AppError(res, "No categories found", NOTFOUND);
+  }
 }
