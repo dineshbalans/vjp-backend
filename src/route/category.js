@@ -16,7 +16,7 @@ const router = Router();
 
 // admin
 
-router.route("/category/create").post(isAuthenticatedAdminUser, CreateCategory);
+router.route("/category/create").post(   CreateCategory);
 router.route("/categories/list").get(isAuthenticatedAdminUser, getCategoriesNames);
 
 router

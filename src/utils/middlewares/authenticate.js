@@ -7,7 +7,7 @@ export const isAuthenticatedUser = async (req, res, next) => {
   const { token } = req.cookies;
 
   if (!token) {
-    return AppError(res, "Login first to assess this resource", BADREQUEST);
+    return next(new AppError(  "Login first to assess this resource", BADREQUEST))
   }
 
   try {
@@ -17,38 +17,44 @@ export const isAuthenticatedUser = async (req, res, next) => {
 
     next();
   } catch (error) {
-    return AppError(res, "Invalid or expired token", BADREQUEST);
+    return AppError(  "Invalid or expired token", BADREQUEST);
   }
 };
 
 export const isAuthenticatedAdminUser = async (req, res, next) => {
   const { at } = req.cookies;
 
+  console.log("coming here", at);
+
   if (!at) {
-    return AppError(res, "Login first to assess this resource", BADREQUEST);
+    return next(
+      new AppError("Login first to assess this resource", BADREQUEST)
+    );
   }
 
+  console.log(at);
   try {
     const decoded = jwt.verify(at, process.env.JWT_SECRET);
     // req.user = decoded;
 
+    console.log(decoded);
     next();
   } catch (error) {
-    return AppError(res, "Invalid or expired token", BADREQUEST);
+    return next(new AppError("Invalid or expired token", BADREQUEST));
   }
 };
 
-export const authorizeRoles = (...roles) => {
-  return (req, res, next) => {
-    if (!roles.includes(req.user.role)) {
-      return next(
-        new AppError(
-          res,
-          `${req.user.role} are not authorized to perform this action`,
-          403
-        )
-      );
-    }
-    next();
-  };
-};
+// export const authorizeRoles = (...roles) => {
+//   return (req, res, next) => {
+//     if (!roles.includes(req.user.role)) {
+//       return next(
+//         new AppError(
+//           res,
+//           `${req.user.role} are not authorized to perform this action`,
+//           403
+//         )
+//       );
+//     }
+//     next();
+//   };
+// };

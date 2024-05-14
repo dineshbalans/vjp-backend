@@ -24,7 +24,7 @@ export const CreateItem = async (req, res, next) => {
 
   if (error) {
     console.log("invalid request " + error.message);
-    return AppError(res, "Something went wrong", BADREQUEST);
+    return next(new AppError("Something went wrong", BADREQUEST));
   }
 
   let itemData = req.body;
@@ -35,9 +35,9 @@ export const CreateItem = async (req, res, next) => {
   await category[0].save();
 
   if (item) {
-    return AppSuccess(res, category, "Item created successfully", SUCCESS);
+    return next(new AppSuccess(category, "Item created successfully", SUCCESS));
   } else {
-    return AppError(res, "Something went wrong", BADREQUEST);
+    return next(new AppError("Something went wrong", BADREQUEST));
   }
 };
 
@@ -45,7 +45,7 @@ export const updateItem = async (req, res, next) => {
   const { id } = req.params;
 
   if (_.isEmpty(id)) {
-    return AppError(res, "Item id is required", BADREQUEST);
+    return next(new AppError("Item id is required", BADREQUEST))
   }
 
   let images = [];
@@ -65,13 +65,13 @@ export const updateItem = async (req, res, next) => {
 
   const category = await update(id, req.body);
   if (category) {
-    return AppSuccess(res, category, "Item Updated successfully", SUCCESS);
+    return AppSuccess(  category, "Item Updated successfully", SUCCESS);
   } else {
-    return AppError(res, "Something went wrong", BADREQUEST);
+    return AppError(  "Something went wrong", BADREQUEST);
   }
 };
 
-// 
+//
 export const getItems = async (req, res, next) => {
   const resPerPage = 12;
   let buildQuery = () => {
@@ -103,8 +103,6 @@ export const getItems = async (req, res, next) => {
     return AppError(res, "Something went wrong", BADREQUEST);
   }
 };
-
-
 
 export const getItem = async (req, res, next) => {
   const { id } = req.params;
