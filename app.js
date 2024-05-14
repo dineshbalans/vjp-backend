@@ -9,6 +9,7 @@ import userRoute from "./src/route/user.js";
 import itemRoute from "./src/route/item.js";
 import adminRoute from "./src/route/admin.js";
 import orderRoute from "./src/route/order.js";
+import globalResponseController from "./src/utils/response-handlers/global-response-controller.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -32,5 +33,7 @@ app.use("/api/v1", userRoute);
 app.use("/api/v1", itemRoute);
 app.use("/api/v1/admin", adminRoute);
 app.use("/api/v1", orderRoute);
+
+app.use(globalResponseController);
 
 export default app;

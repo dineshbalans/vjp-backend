@@ -1,9 +1,12 @@
 import { getAll as getAllCategories } from "../service/categotyService.js";
 import { getAll as getItems } from "../service/itemService.js";
 import { getAll as getAllUsers } from "../service/userService.js";
-import { BADREQUEST, SUCCESS } from "../utils/constants/statusCode.js";
+import {
+  BADREQUEST,
+  SUCCESS,
+  UNAUTHORIZED,
+} from "../utils/constants/statusCode.js";
 import AppError from "../utils/response-handlers/app-error.js";
-import Apadminuccess from "../utils/response-handlers/app-success.js";
 import _ from "lodash";
 import jwt from "jsonwebtoken";
 import AppSuccess from "./../utils/response-handlers/app-success.js";
@@ -13,15 +16,16 @@ export const getDashboard = async (req, res, next) => {
     const items = await getItems();
     const users = await getAllUsers();
 
-    return AppSuccess(
-      res,
-      {
-        categoriesCount: categories.length,
-        itemsCount: items.length,
-        usersCount: users.length,
-      },
-      "Dashboard Data successfully Send",
-      SUCCESS
+    return next(
+      new AppSuccess(
+        {
+          categoriesCount: categories.length,
+          itemsCount: items.length,
+          usersCount: users.length,
+        },
+        "Dashboard Data successfully Send",
+        SUCCESS
+      )
     );
   } catch (err) {
     return AppError(res, "Something went wrong", BADREQUEST);
@@ -49,11 +53,10 @@ export const getDashboardDetails = async (req, res, next) => {
 // Auth
 
 export const loginAdmin = async (req, res, next) => {
-  console.log('coming')
   const { username, password } = req.body;
 
   if (_.isEmpty(username) || _.isEmpty(password)) {
-    return AppError(res, "Username and Password are required", BADREQUEST);
+    return next(new AppError("Username and Password are required", BADREQUEST));
   }
 
   if (username === process.env.USERID && password === process.env.PASSWORD) {
@@ -74,7 +77,7 @@ export const loginAdmin = async (req, res, next) => {
       user: true,
     });
   } else {
-    return AppError(res, "Something went wrong", BADREQUEST);
+    return next(new AppError("Something went wrong", UNAUTHORIZED));
   }
 };
 
