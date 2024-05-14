@@ -21,7 +21,7 @@ export const CreateCategory = async (req, res, next) => {
 
   if (error) {
     console.log("invalid request " + error.message);
-    return next(new AppError("Something went wrong", BADREQUEST));
+    return next(new AppError("Something went wrong At Data", BADREQUEST));
   }
 
   let categoryData = req.body;
