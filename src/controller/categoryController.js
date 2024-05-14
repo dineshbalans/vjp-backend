@@ -71,28 +71,32 @@ export const getCategories = async (req, res, next) => {
 export const getCategory = async (req, res, next) => {
   const { id } = req.params;
   if (_.isEmpty(id)) {
-    return AppError(res, "Category id is required", BADREQUEST);
+    return next(new AppError("Category id is required", BADREQUEST));
   }
   const category = await getOne(id);
 
   if (category) {
-    return AppSuccess(res, category, "Category successfully Send", SUCCESS);
+    return next(
+      new AppSuccess(category, "Category successfully Send", SUCCESS)
+    );
   } else {
-    return AppError(res, "Something went wrong", BADREQUEST);
+    return next(new AppError("Something went wrong", BADREQUEST));
   }
 };
 
 export const deleteCategory = async (req, res, next) => {
   const { id } = req.params;
   if (_.isEmpty(id)) {
-    return AppError(res, "Category id is required", BADREQUEST);
+    return next(new AppError("Category id is required", BADREQUEST));
   }
   const category = await remove(id);
 
   if (category) {
-    return AppSuccess(res, category, "Category Deleted successfully", SUCCESS);
+    return next(
+      new AppSuccess(category, "Category Deleted successfully", SUCCESS)
+    );
   } else {
-    return AppError(res, "Something went wrong", BADREQUEST);
+    return next(new AppError("Something went wrong", BADREQUEST));
   }
 };
 
@@ -102,17 +106,21 @@ export const getCategorieswithSearch = async (req, res, next) => {
   const search = await getSearchinTotal(req);
 
   if (categories) {
-    return AppSuccess(res, categories, "Categories successfully Send", SUCCESS);
+    return next(
+      new AppSuccess(categories, "Categories successfully Send", SUCCESS)
+    );
   } else {
-    return AppError(res, "No categories found", NOTFOUND);
+    return next(new AppError("No categories found", NOTFOUND));
   }
 };
 
 export const getCategoriesNames = async (req, res, next) => {
   const categories = await getAllName();
   if (categories) {
-    return AppSuccess(res, categories, "Categories successfully Send", SUCCESS);
+    return next(
+      new AppSuccess(categories, "Categories successfully Send", SUCCESS)
+    );
   } else {
-    return AppError(res, "No categories found", NOTFOUND);
+    return next(new AppError("No categories found", NOTFOUND));
   }
 };
