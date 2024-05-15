@@ -110,7 +110,7 @@ export const loginAdmin = async (req, res, next) => {
       ),
       // maxAge: 3600 * 1000,
       httpOnly: true,
-      secure: false,  
+      secure: true,  
       sameSite: "none", // Prevent CSRF attacks
       // domain: "localhost",
       // path: "/",
