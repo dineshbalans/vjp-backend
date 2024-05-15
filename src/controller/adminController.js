@@ -75,7 +75,7 @@ export const getDashboardDetails = async (req, res, next) => {
 //     res.setHeader(
 //       "Set-Cookie",
 //       `at=${token}; maxAge=${options.expires}; httpOnly=true;`
-//     ); 
+//     );
 
 //     // res.status(200).cookie("at", token, options).json({
 //     //   success: true,
@@ -105,12 +105,15 @@ export const loginAdmin = async (req, res, next) => {
     });
 
     const options = {
-      expires: new Date(
-        Date.now() + process.env.COOKIE_EXPIRES_TIME * 24 * 60 * 60 * 1000
-      ),
+      // expires: new Date(
+      //   Date.now() + process.env.COOKIE_EXPIRES_TIME * 24 * 60 * 60 * 1000
+      // ),
+      maxAge: 3600 * 1000,
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // Ensuring secure cookies in production
-      sameSite: "Lax", // Prevent CSRF attacks
+      secure: true, // Ensuring secure cookies in production
+      sameSite: "none", // Prevent CSRF attacks
+      domain: "localhost",
+      path: "/",
     };
 
     res.cookie("at", token, options);
