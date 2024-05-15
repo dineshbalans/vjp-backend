@@ -42,8 +42,7 @@ export const update = async (id, data) => {
     new: true,
     runValidators: true,
   });
-
-  console.log(id,data,result);
+ 
   return result;
 };
 

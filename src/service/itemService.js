@@ -10,7 +10,7 @@ export const getAll = async () => {
 };
 
 export const getOne = async (id) => {
-  const result = await Item.find({ _id: id });
+  const result = await Item.findOne({ _id: id });
   return result;
 };
 

@@ -18,7 +18,7 @@ export const getAll = async () => {
 };
 
 export const getOne = async (id) => {
-  const result = await Order.find({ _id: id });
+  const result = await Order.findOne({ _id: id });
   return result;
 };
 

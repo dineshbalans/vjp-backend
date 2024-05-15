@@ -113,7 +113,7 @@ export const loginAdmin = async (req, res, next) => {
       sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax", // Adjust SameSite attribute based on environment
     };
 
-    res.cookie("at", token,options);
+    res.cookie("at", token, options);
 
     res.status(200).json({
       success: true,
@@ -138,10 +138,20 @@ export const getAdminProfile = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded;
 
-    res.status(200).json({
-      success: true,
-      user: true,
-    });
+    // res.status(200).json({
+    //   success: true,
+    //   user: true,
+    // });
+
+    return next(
+      new AppSuccess(
+        {
+          user: true,
+        },
+        "Admin Available ",
+        SUCCESS
+      )
+    );
   } catch (error) {
     return next(new AppError("Invalid or expired token", BADREQUEST));
   }
