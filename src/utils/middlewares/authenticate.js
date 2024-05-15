@@ -5,10 +5,12 @@ import AppError from "./../response-handlers/app-error.js";
 
 export const isAuthenticatedUser = async (req, res, next) => {
   const { token } = req.cookies;
-  console.log('user')
+  console.log("user");
 
   if (!token) {
-    return next(new AppError(  "Login first to assess this resource", BADREQUEST))
+    return next(
+      new AppError("Login first to assess this resource", BADREQUEST)
+    );
   }
 
   try {
@@ -18,11 +20,10 @@ export const isAuthenticatedUser = async (req, res, next) => {
 
     next();
   } catch (error) {
-    return AppError(  "Invalid or expired token", BADREQUEST);
+    return AppError("Invalid or expired token", BADREQUEST);
   }
 };
 
- 
 // export const isAuthenticatedAdminUser = async (req, res, next) => {
 //   const { at } = req.cookies;
 
@@ -49,10 +50,6 @@ export const isAuthenticatedUser = async (req, res, next) => {
 export const isAuthenticatedAdminUser = async (req, res, next) => {
   const { at } = req.cookies;
 
-  const allCookies  = document.cookie
-console.log('cookie')
-  console.log(allCookies);
-
   console.log("Checking authentication...");
   console.log("Token:", at);
 
@@ -72,7 +69,6 @@ console.log('cookie')
     return next(new AppError("Invalid or expired token", BADREQUEST));
   }
 };
-
 
 // export const authorizeRoles = (...roles) => {
 //   return (req, res, next) => {

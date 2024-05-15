@@ -113,7 +113,7 @@ export const loginAdmin = async (req, res, next) => {
       sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax", // Adjust SameSite attribute based on environment
     };
 
-    res.cookie("at", token, options);
+    res.cookie("at", token,options);
 
     res.status(200).json({
       success: true,

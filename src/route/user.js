@@ -28,7 +28,7 @@ router.route("/user/delete/:id").delete(isAuthenticatedAdminUser, deleteUser);
 
 router.route("/user/register").post(CreateUser);
 router.route("/user/login").post(loginUser);
-router.route("/user/update/:id").put(isAuthenticatedUser,updateUser);
+router.route("/user/update/:id").put(isAuthenticatedUser, updateUser);
 
 router
   .route("/user/email-password/update")
@@ -40,6 +40,8 @@ router.route("/user/password/reset/:token").post(resetPassword);
 router
   .route("/user/wishlist/:productId")
   .put(isAuthenticatedUser, wishListAddOrRemove);
+
+ 
 
 // router.route("/user/update/:id").put(updateUser);
 

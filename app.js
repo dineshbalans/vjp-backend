@@ -19,6 +19,7 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173"];
+app.use(cookieParser());
 
 // app.use(
 //   cors({
@@ -67,7 +68,6 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
 
 app.use("/src/uploads", express.static(path.join(__dirname, "src/uploads")));
 
@@ -76,6 +76,8 @@ app.use("/api/v1", userRoute);
 app.use("/api/v1", itemRoute);
 app.use("/api/v1/admin", adminRoute);
 app.use("/api/v1", orderRoute);
+
+
 
 app.use(globalResponseController);
 
