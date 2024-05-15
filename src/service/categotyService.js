@@ -14,7 +14,7 @@ export const getAllName = async () => {
 };
 
 export const getOne = async (id) => {
-  const result = await Category.find({ _id: id });
+  const result = await Category.findOne({ _id: id });
   return result;
 };
 

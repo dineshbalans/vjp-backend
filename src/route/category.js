@@ -26,7 +26,7 @@ router
   .delete(isAuthenticatedAdminUser, deleteCategory);
 
 // common
-router.route("/categories").get(isAuthenticatedAdminUser, getCategories);
+router.route("/categories").get(getCategories);
 router.route("/category/:id").get(getCategory);
 
 export default router;
