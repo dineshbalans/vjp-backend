@@ -117,8 +117,7 @@ export const loginAdmin = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      at: token,
-      user: true,
+      admin: true,
     });
   } else {
     return next(new AppError("Something went wrong", UNAUTHORIZED));
