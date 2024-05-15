@@ -105,15 +105,15 @@ export const loginAdmin = async (req, res, next) => {
     });
 
     const options = {
-      // expires: new Date(
-      //   Date.now() + process.env.COOKIE_EXPIRES_TIME * 24 * 60 * 60 * 1000
-      // ),
-      maxAge: 3600 * 1000,
+      expires: new Date(
+        Date.now() + process.env.COOKIE_EXPIRES_TIME * 24 * 60 * 60 * 1000
+      ),
+      // maxAge: 3600 * 1000,
       httpOnly: true,
-      secure: true, // Ensuring secure cookies in production
+      secure: false,  
       sameSite: "none", // Prevent CSRF attacks
-      domain: "localhost",
-      path: "/",
+      // domain: "localhost",
+      // path: "/",
     };
 
     res.cookie("at", token, options);
