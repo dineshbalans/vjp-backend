@@ -50,18 +50,22 @@ export const isAuthenticatedUser = async (req, res, next) => {
 export const isAuthenticatedAdminUser = async (req, res, next) => {
   const { at } = req.cookies;
 
-  // if (!at) {
-  //   console.log("No token found, redirecting to login");
-  //   return next(
-  //     new AppError("Login first to access this resource", BADREQUEST)
-  //   );
-  // }
+  // console.log("Checking authentication...");
+  // console.log("Token:", at);
+
+  if (!at) {
+    console.log("No token found, redirecting to login");
+    return next(
+      new AppError("Login first to access this resource", BADREQUEST)
+    );
+  }
 
   try {
     const decoded = jwt.verify(at, process.env.JWT_SECRET);
-
+    req.decoded = decoded;
     next();
   } catch (error) {
+    console.error("Token verification failed:", error);
     return next(new AppError("Invalid or expired token", BADREQUEST));
   }
 };

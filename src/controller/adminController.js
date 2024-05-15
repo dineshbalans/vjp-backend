@@ -1,6 +1,6 @@
 import { getAll as getAllCategories } from "../service/categotyService.js";
 import { getAll as getItems } from "../service/itemService.js";
-import { getAll as getAllUsers } from "../service/userService.js";
+import { getAll as getAllUsers, getOne } from "../service/userService.js";
 import {
   BADREQUEST,
   SUCCESS,
@@ -126,27 +126,11 @@ export const loginAdmin = async (req, res, next) => {
 };
 
 export const getAdminProfile = async (req, res, next) => {
-  const { at } = req.cookies;
-
-  if (!at) {
-    return next(
-      new AppError("Login first to assess this resource", BADREQUEST)
-    );
-  }
-
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
-
-    // res.status(200).json({
-    //   success: true,
-    //   user: true,
-    // });
-
     return next(
       new AppSuccess(
         {
-          user: true,
+          admin: true,
         },
         "Admin Available ",
         SUCCESS
@@ -163,5 +147,5 @@ export const logoutAdmin = async (req, res, next) => {
     httpOnly: true,
   });
 
-  return next(new AppSuccess({ user: false }, "Logout successfully", SUCCESS));
+  return next(new AppSuccess({ admin: false }, "Logout successfully", SUCCESS));
 };
