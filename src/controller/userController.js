@@ -25,14 +25,14 @@ export const CreateUser = async (req, res, next) => {
   let alreadyExists = await registerCheck(req.body.email);
 
   if (alreadyExists) {
-    return next(new  AppError(  "User already exists", BADREQUEST))
+    return next(new AppError("User already exists", BADREQUEST));
   }
 
   const { error } = validateCreateUser.validate(req.body);
 
   if (error) {
     console.log("invalid request " + error.message);
-    return next(new  AppError(  "Something went wrong", BADREQUEST))
+    return next(new AppError("Something went wrong", BADREQUEST));
   }
 
   let userData = req.body;
@@ -41,7 +41,7 @@ export const CreateUser = async (req, res, next) => {
   if (user) {
     return sendToken(res, user, "User created successfully", SUCCESS);
   } else {
-    return next(new AppError(  "Something went wrong", BADREQUEST))
+    return next(new AppError("Something went wrong", BADREQUEST));
   }
 };
 
@@ -49,17 +49,17 @@ export const loginUser = async (req, res, next) => {
   const { email, pswd } = req.body;
 
   if (_.isEmpty(email) || _.isEmpty(pswd)) {
-    return AppError(res, "Email and Password are required", BADREQUEST);
+    return next(new AppError("Email and Password are required", BADREQUEST));
   }
 
   const user = await loginCheck(email);
 
   if (!user) {
-    return AppError(res, "Email or password is incorrect", BADREQUEST);
+    return next(new AppError("Email or password is incorrect", BADREQUEST));
   }
 
   if (!(await user.isValidPassword(pswd))) {
-    return AppError(res, "Invalid Email or Password", BADREQUEST);
+    return next(new AppError("Invalid Email or Password", BADREQUEST));
   }
 
   sendToken(res, user, "User logged in successfully", SUCCESS);
@@ -68,51 +68,51 @@ export const loginUser = async (req, res, next) => {
 export const updateUser = async (req, res, next) => {
   const { id } = req.params;
   if (_.isEmpty(id)) {
-    return AppError(res, "User id is required", BADREQUEST);
+    return next(new AppError("User id is required", BADREQUEST));
   }
 
   const user = await update(id, req.body);
   if (user) {
-    return AppSuccess(res, user, "User Updated successfully", SUCCESS);
+    return next(new AppSuccess(user, "User Updated successfully", SUCCESS));
   } else {
-    return AppError(res, "Something went wrong", BADREQUEST);
+    return next(new AppError("Something went wrong", BADREQUEST));
   }
 };
 
 export const getUsers = async (req, res, next) => {
   const users = await getAll();
   if (users) {
-    return AppSuccess(res, users, "Users successfully Send", SUCCESS);
+    return next(new AppSuccess(users, "Users successfully Send", SUCCESS));
   } else {
-    return AppError(res, "Something went wrong", BADREQUEST);
+    return next(new AppError("Something went wrong", BADREQUEST));
   }
 };
 
 export const getUser = async (req, res, next) => {
   const { id } = req.params;
   if (_.isEmpty(id)) {
-    return next(new  AppError(  "User id is required", BADREQUEST))
+    return next(new AppError("User id is required", BADREQUEST));
   }
   const user = await getOne(id);
 
   if (user) {
-    return next(new AppSuccess(  user, "User successfully Send", SUCCESS))
+    return next(new AppSuccess(user, "User successfully Send", SUCCESS));
   } else {
-    return next(new AppError(  "Something went wrong", BADREQUEST))
+    return next(new AppError("Something went wrong", BADREQUEST));
   }
 };
 
 export const deleteUser = async (req, res, next) => {
   const { id } = req.params;
   if (_.isEmpty(id)) {
-    return AppError(res, "User id is required", BADREQUEST);
+    return next(new AppError("User id is required", BADREQUEST));
   }
   const user = await remove(id);
 
   if (user) {
-    return AppSuccess(res, user, "User Deleted successfully", SUCCESS);
+    return next(new AppSuccess(user, "User Deleted successfully", SUCCESS));
   } else {
-    return AppError(res, "Something went wrong", BADREQUEST);
+    return next(new AppError("Something went wrong", BADREQUEST));
   }
 };
 
@@ -122,13 +122,13 @@ export const updateEmailOrPassword = async (req, res, next) => {
     const { type, email, pswd, newPassword, confirmPassword } = req.body;
 
     if (!user) {
-      return AppError(res, "User Not exists", BADREQUEST);
+      return next(new AppError("User Not exists", BADREQUEST));
     }
 
     if (type === "email") {
       let alreadyExists = await registerCheck(req.body.email);
       if (alreadyExists) {
-        return AppError(res, "User Email already exists", BADREQUEST);
+        return next(new AppError("User Email already exists", BADREQUEST));
       }
 
       user.email = email;
@@ -138,39 +138,40 @@ export const updateEmailOrPassword = async (req, res, next) => {
     if (type === "password") {
       if (await user.isValidPassword(pswd)) {
         if (newPassword !== confirmPassword) {
-          return AppError(
-            res,
-            "Password and confirm password does not match",
-            BADREQUEST
+          return next(
+            new AppError(
+              "Password and confirm password does not match",
+              BADREQUEST
+            )
           );
         }
 
         user.pswd = newPassword;
         await user.save();
       } else {
-        return AppError(res, "Invalid Email or Password", BADREQUEST);
+        return next(new AppError("Invalid Email or Password", BADREQUEST));
       }
     }
 
     if (user) {
-      return AppSuccess(res, user, "User Updated successfully", SUCCESS);
+      return next(new AppSuccess(user, "User Updated successfully", SUCCESS));
     } else {
-      return AppError(res, "Something went wrong", BADREQUEST);
+      return next(new AppError("Something went wrong", BADREQUEST));
     }
   } catch (err) {
-    return AppError(res, err.message, BADREQUEST);
+    return next(new AppError(err.message, BADREQUEST));
   }
 };
 
 export const forgotPassword = async (req, res, next) => {
   const { email } = req.body;
   if (_.isEmpty(email)) {
-    return AppError(res, "Email is required", BADREQUEST);
+    return next(new AppError("Email is required", BADREQUEST));
   }
   const user = await getOneByEmail(email);
 
   if (!user) {
-    return AppError(res, "Email not found", BADREQUEST);
+    return next(new AppError("Email not found", BADREQUEST));
   }
 
   const resetToken = user.getResetPasswordToken();
@@ -190,7 +191,7 @@ export const forgotPassword = async (req, res, next) => {
     user.resetPasswordToken = undefined;
     user.resetPasswordTokenExpire = undefined;
     await user.save({ validateBeforeSave: false });
-    return AppError(res, err.message, BADREQUEST);
+    return next(new AppError(err.message, BADREQUEST));
   }
 
   // sendToken(res, resetUrl, "Password reset link sent to your email", SUCCESS);
@@ -198,10 +199,11 @@ export const forgotPassword = async (req, res, next) => {
 
 export const resetPassword = async (req, res, next) => {
   if (_.isEmpty(req.params.token)) {
-    return AppError(
-      res,
-      "Password reset token is invalid or has been expired",
-      BADREQUEST
+    return next(
+      new AppError(
+        "Password reset token is invalid or has been expired",
+        BADREQUEST
+      )
     );
   }
   const resetPasswordToken = crypto
@@ -215,18 +217,17 @@ export const resetPassword = async (req, res, next) => {
   });
 
   if (!user) {
-    return AppError(
-      res,
-      "Password reset token is invalid or has been expired",
-      BADREQUEST
+    return next(
+      new AppError(
+        "Password reset token is invalid or has been expired",
+        BADREQUEST
+      )
     );
   }
 
   if (req.body.password !== req.body.confirmPassword) {
-    return AppError(
-      res,
-      "Password and confirm password does not match",
-      BADREQUEST
+    return next(
+      new AppError("Password and confirm password does not match", BADREQUEST)
     );
   }
 
@@ -246,7 +247,7 @@ export const wishListAddOrRemove = async (req, res, next) => {
     const product = await getItem(productId);
 
     if (!product) {
-      return AppError(res, "Product not found", NOTFOUND);
+      return next(new AppError("Product not found", NOTFOUND));
     }
 
     let alreadyIn = false;
@@ -265,8 +266,10 @@ export const wishListAddOrRemove = async (req, res, next) => {
     }
 
     await user.save();
-    return AppSuccess(res, user, "Wish list updated successfully", SUCCESS);
+    return next(
+      new AppSuccess(user, "Wish list updated successfully", SUCCESS)
+    );
   } catch (err) {
-    return AppError(res, err.message, BADREQUEST);
+    return next(new AppError(err.message, BADREQUEST));
   }
 };

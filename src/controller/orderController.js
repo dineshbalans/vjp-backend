@@ -18,7 +18,7 @@ export const CreateOrder = async (req, res, next) => {
 
   if (error) {
     console.log("invalid request " + error.message);
-    return AppError(res, "Something went wrong", BADREQUEST);
+    return next(new AppError("Something went wrong", BADREQUEST));
   }
 
   let orderData = req.body;
@@ -26,23 +26,23 @@ export const CreateOrder = async (req, res, next) => {
   const order = await add(orderData);
 
   if (order) {
-    return AppSuccess(res, order, "Order created successfully", SUCCESS);
+    return next(new AppSuccess(order, "Order created successfully", SUCCESS));
   } else {
-    return AppError(res, "Something went wrong", BADREQUEST);
+    return next(new AppError("Something went wrong", BADREQUEST));
   }
 };
 
 export const getOrder = async (req, res, next) => {
   const { id } = req.params;
   if (_.isEmpty(id)) {
-    return AppError(res, "Order id is required", BADREQUEST);
+    return next(new AppError("Order id is required", BADREQUEST));
   }
   const order = await getOne(id);
 
   if (order) {
-    return AppSuccess(res, order, "Order successfully Send", SUCCESS);
+    return next(new AppSuccess(order, "Order successfully Send", SUCCESS));
   } else {
-    return AppError(res, "Something went wrong", BADREQUEST);
+    return next(new AppError("Something went wrong", BADREQUEST));
   }
 };
 
@@ -50,14 +50,14 @@ export const getMyOrders = async (req, res, next) => {
   const { id } = req.user;
 
   if (_.isEmpty(id)) {
-    return AppError(res, "User id is required", BADREQUEST);
+    return next(new AppError("User id is required", BADREQUEST));
   }
 
   const orders = await getMyAllOrders(id);
   if (orders) {
-    return AppSuccess(res, orders, "orders data", SUCCESS);
+    return next(new AppSuccess(orders, "orders data", SUCCESS));
   } else {
-    return AppError(res, "Something went wrong", BADREQUEST);
+    return next(new AppError("Something went wrong", BADREQUEST));
   }
 };
 
@@ -66,19 +66,18 @@ export const getMyOrders = async (req, res, next) => {
 export const updateOrder = async (req, res, next) => {
   const { id } = req.params;
   if (_.isEmpty(id)) {
-    return AppError(res, "Order id is required", BADREQUEST);
+    return next(new AppError("Order id is required", BADREQUEST));
   }
 
   const order = await update(id, req.body);
   if (order) {
-    return AppSuccess(res, order, "Order Updated successfully", SUCCESS);
+    return next(new AppSuccess(order, "Order Updated successfully", SUCCESS));
   } else {
-    return AppError(res, "Something went wrong", BADREQUEST);
+    return next(new AppError("Something went wrong", BADREQUEST));
   }
 };
 
 export const getOrders = async (req, res, next) => {
-
   const resPerPage = 12;
 
   let buildQuery = () => {
@@ -98,13 +97,14 @@ export const getOrders = async (req, res, next) => {
   const orders = await buildQuery().paginate(resPerPage).query;
 
   if (orders) {
-    return AppSuccess(
-      res,
-      { ordersCount: ordersCount, orders: orders },
-      "Orders Data",
-      SUCCESS
+    return next(
+      new AppSuccess(
+        { ordersCount: ordersCount, orders: orders },
+        "Orders Data",
+        SUCCESS
+      )
     );
   } else {
-    return AppError(res, "Something went wrong", BADREQUEST);
+    return next(new AppError("Something went wrong", BADREQUEST));
   }
 };

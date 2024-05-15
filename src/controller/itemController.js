@@ -45,7 +45,7 @@ export const updateItem = async (req, res, next) => {
   const { id } = req.params;
 
   if (_.isEmpty(id)) {
-    return next(new AppError("Item id is required", BADREQUEST))
+    return next(new AppError("Item id is required", BADREQUEST));
   }
 
   let images = [];
@@ -65,9 +65,9 @@ export const updateItem = async (req, res, next) => {
 
   const category = await update(id, req.body);
   if (category) {
-    return AppSuccess(  category, "Item Updated successfully", SUCCESS);
+    return next(new AppSuccess(category, "Item Updated successfully", SUCCESS));
   } else {
-    return AppError(  "Something went wrong", BADREQUEST);
+    return next(new AppError("Something went wrong", BADREQUEST));
   }
 };
 
@@ -93,41 +93,42 @@ export const getItems = async (req, res, next) => {
   // const items = await getAll();
 
   if (items) {
-    return AppSuccess(
-      res,
-      { itemsCount: itemsCount, resPerPage: resPerPage, items: items },
-      "Items successfully Send",
-      SUCCESS
+    return next(
+      new AppSuccess(
+        { itemsCount: itemsCount, resPerPage: resPerPage, items: items },
+        "Items successfully Send",
+        SUCCESS
+      )
     );
   } else {
-    return AppError(res, "Something went wrong", BADREQUEST);
+    return next(new AppError("Something went wrong", BADREQUEST));
   }
 };
 
 export const getItem = async (req, res, next) => {
   const { id } = req.params;
   if (_.isEmpty(id)) {
-    return AppError(res, "Item id is required", BADREQUEST);
+    return next(new AppError("Item id is required", BADREQUEST));
   }
   const item = await getOne(id);
 
   if (item) {
-    return AppSuccess(res, item, "Item successfully Send", SUCCESS);
+    return next(new AppSuccess(item, "Item successfully Send", SUCCESS));
   } else {
-    return AppError(res, "Something went wrong", BADREQUEST);
+    return next(new AppError("Something went wrong", BADREQUEST));
   }
 };
 
 export const deleteItem = async (req, res, next) => {
   const { id } = req.params;
   if (_.isEmpty(id)) {
-    return AppError(res, "Item id is required", BADREQUEST);
+    return next(new AppError("Item id is required", BADREQUEST));
   }
   const item = await remove(id);
 
   if (item) {
-    return AppSuccess(res, item, "Item Deleted successfully", SUCCESS);
+    return next(new AppSuccess(item, "Item Deleted successfully", SUCCESS));
   } else {
-    return AppError(res, "Something went wrong", BADREQUEST);
+    return next(new AppError("Something went wrong", BADREQUEST));
   }
 };

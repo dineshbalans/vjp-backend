@@ -28,7 +28,7 @@ export const getDashboard = async (req, res, next) => {
       )
     );
   } catch (err) {
-    return AppError(res, "Something went wrong", BADREQUEST);
+    return next(new  AppError(  "Something went wrong", BADREQUEST));
   }
 };
 
@@ -87,7 +87,7 @@ export const getAdminProfile = async (req, res, next) => {
 
   if (!at) {
     return next(
-      new AppError(res, "Login first to assess this resource", BADREQUEST)
+      new AppError(  "Login first to assess this resource", BADREQUEST)
     );
   }
 
@@ -100,7 +100,7 @@ export const getAdminProfile = async (req, res, next) => {
       user: true,
     });
   } catch (error) {
-    return next(new AppError(res, "Invalid or expired token", BADREQUEST));
+    return next(new AppError(  "Invalid or expired token", BADREQUEST));
   }
 };
 
@@ -110,5 +110,5 @@ export const logoutAdmin = async (req, res, next) => {
     httpOnly: true,
   });
 
-  return next(new AppSuccess(res, { user: false }, "Logout successfully", SUCCESS));
+  return next(new AppSuccess(  { user: false }, "Logout successfully", SUCCESS));
 };
