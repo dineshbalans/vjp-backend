@@ -5,6 +5,7 @@ import AppError from "./../response-handlers/app-error.js";
 
 export const isAuthenticatedUser = async (req, res, next) => {
   const { token } = req.cookies;
+  console.log('user')
 
   if (!token) {
     return next(new AppError(  "Login first to assess this resource", BADREQUEST))
@@ -21,28 +22,53 @@ export const isAuthenticatedUser = async (req, res, next) => {
   }
 };
 
+ 
+// export const isAuthenticatedAdminUser = async (req, res, next) => {
+//   const { at } = req.cookies;
+
+//   console.log("coming here", at);
+
+//   if (!at) {
+//     return next(
+//       new AppError("Login first to assess this resource", BADREQUEST)
+//     );
+//   }
+
+//   console.log(at);
+//   try {
+//     const decoded = jwt.verify(at, process.env.JWT_SECRET);
+//     // req.user = decoded;
+
+//     console.log(decoded);
+//     next();
+//   } catch (error) {
+//     return next(new AppError("Invalid or expired token", BADREQUEST));
+//   }
+// };
+
 export const isAuthenticatedAdminUser = async (req, res, next) => {
   const { at } = req.cookies;
 
-  console.log("coming here", at);
+  console.log("Checking authentication...");
+  console.log("Token:", at);
 
   if (!at) {
+    console.log("No token found, redirecting to login");
     return next(
-      new AppError("Login first to assess this resource", BADREQUEST)
+      new AppError("Login first to access this resource", BADREQUEST)
     );
   }
 
-  console.log(at);
   try {
     const decoded = jwt.verify(at, process.env.JWT_SECRET);
-    // req.user = decoded;
-
-    console.log(decoded);
+    console.log("Decoded token:", decoded);
     next();
   } catch (error) {
+    console.error("Token verification failed:", error);
     return next(new AppError("Invalid or expired token", BADREQUEST));
   }
 };
+
 
 // export const authorizeRoles = (...roles) => {
 //   return (req, res, next) => {

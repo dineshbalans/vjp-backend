@@ -19,6 +19,8 @@ const server = app.listen(port, () => {
   );
 });
 
+app.use(globalResponseController);
+
 
 process.on("unhandledRejection", (err) => {
   console.error("Unhandled Rejection", err);

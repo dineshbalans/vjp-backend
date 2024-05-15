@@ -34,6 +34,5 @@ app.use("/api/v1", itemRoute);
 app.use("/api/v1/admin", adminRoute);
 app.use("/api/v1", orderRoute);
 
-app.use(globalResponseController);
 
 export default app;

@@ -21,7 +21,7 @@ const router = Router();
 // admin
 
 router.route("/users").get(isAuthenticatedAdminUser, getUsers);
-router.route("/user/:id").get(isAuthenticatedAdminUser, getUser);
+router.route("/user/:id").get(isAuthenticatedUser, getUser);
 router.route("/user/delete/:id").delete(isAuthenticatedAdminUser, deleteUser);
 
 // User Routes

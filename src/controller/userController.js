@@ -25,14 +25,14 @@ export const CreateUser = async (req, res, next) => {
   let alreadyExists = await registerCheck(req.body.email);
 
   if (alreadyExists) {
-    return AppError(res, "User already exists", BADREQUEST);
+    return next(new  AppError(  "User already exists", BADREQUEST))
   }
 
   const { error } = validateCreateUser.validate(req.body);
 
   if (error) {
     console.log("invalid request " + error.message);
-    return AppError(res, "Something went wrong", BADREQUEST);
+    return next(new  AppError(  "Something went wrong", BADREQUEST))
   }
 
   let userData = req.body;
@@ -41,7 +41,7 @@ export const CreateUser = async (req, res, next) => {
   if (user) {
     return sendToken(res, user, "User created successfully", SUCCESS);
   } else {
-    return AppError(res, "Something went wrong", BADREQUEST);
+    return next(new AppError(  "Something went wrong", BADREQUEST))
   }
 };
 
@@ -91,14 +91,14 @@ export const getUsers = async (req, res, next) => {
 export const getUser = async (req, res, next) => {
   const { id } = req.params;
   if (_.isEmpty(id)) {
-    return AppError(res, "User id is required", BADREQUEST);
+    return next(new  AppError(  "User id is required", BADREQUEST))
   }
   const user = await getOne(id);
 
   if (user) {
-    return AppSuccess(res, user, "User successfully Send", SUCCESS);
+    return next(new AppSuccess(  user, "User successfully Send", SUCCESS))
   } else {
-    return AppError(res, "Something went wrong", BADREQUEST);
+    return next(new AppError(  "Something went wrong", BADREQUEST))
   }
 };
 

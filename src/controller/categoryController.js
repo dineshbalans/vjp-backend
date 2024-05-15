@@ -30,11 +30,7 @@ export const CreateCategory = async (req, res, next) => {
 
   if (category) {
     return next(
-      new AppSuccess(
-        { category, categories },
-        "Category created successfully",
-        SUCCESS
-      )
+      new AppSuccess(category, "Category created successfully", SUCCESS)
     );
   } else {
     return next(new AppError("Something went wrong", BADREQUEST));
