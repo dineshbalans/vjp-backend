@@ -108,12 +108,9 @@ export const loginAdmin = async (req, res, next) => {
       expires: new Date(
         Date.now() + process.env.COOKIE_EXPIRES_TIME * 24 * 60 * 60 * 1000
       ),
-      // maxAge: 3600 * 1000,
       httpOnly: true,
-      secure: true,  
-      sameSite: "none", // Prevent CSRF attacks
-      // domain: "localhost",
-      // path: "/",
+      secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax", // Adjust SameSite attribute based on environment
     };
 
     res.cookie("at", token, options);
