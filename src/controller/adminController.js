@@ -141,9 +141,23 @@ export const getAdminProfile = async (req, res, next) => {
 };
 
 export const logoutAdmin = async (req, res, next) => {
-  res.cookie("at", null, {
+  // res.cookie("at", null, {
+  //   expires: new Date(Date.now()),
+  //   httpOnly: true,
+  // });
+
+  const options = {
     expires: new Date(Date.now()),
     httpOnly: true,
+    secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax", // Adjust SameSite attribute based on environment
+  };
+
+  res.cookie("at", token, options);
+
+  res.status(200).json({
+    success: true,
+    admin: true,
   });
 
   return next(new AppSuccess({ admin: false }, "Logout successfully", SUCCESS));
