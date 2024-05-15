@@ -53,6 +53,45 @@ export const getDashboardDetails = async (req, res, next) => {
 
 // Auth
 
+// export const loginAdmin = async (req, res, next) => {
+//   const { username, password } = req.body;
+
+//   if (_.isEmpty(username) || _.isEmpty(password)) {
+//     return next(new AppError("Username and Password are required", BADREQUEST));
+//   }
+
+//   if (username === process.env.USERID && password === process.env.PASSWORD) {
+//     const token = jwt.sign({ username }, process.env.JWT_SECRET, {
+//       expiresIn: process.env.JWT_EXPIRES_TIME,
+//     });
+
+//     const options = {
+//       expires: new Date(
+//         Date.now() + process.env.COOKIE_EXPIRES_TIME * 24 * 60 * 60 * 1000
+//       ),
+//       httpOnly: true,
+//     };
+
+//     res.setHeader(
+//       "Set-Cookie",
+//       `at=${token}; maxAge=${options.expires}; httpOnly=true;`
+//     ); 
+
+//     // res.status(200).cookie("at", token, options).json({
+//     //   success: true,
+//     //   at: token,
+//     //   user: true,
+//     // });
+//     res.status(200).json({
+//       success: true,
+//       at: token,
+//       user: true,
+//     });
+//   } else {
+//     return next(new AppError("Something went wrong", UNAUTHORIZED));
+//   }
+// };
+
 export const loginAdmin = async (req, res, next) => {
   const { username, password } = req.body;
 
@@ -70,18 +109,12 @@ export const loginAdmin = async (req, res, next) => {
         Date.now() + process.env.COOKIE_EXPIRES_TIME * 24 * 60 * 60 * 1000
       ),
       httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // Ensuring secure cookies in production
+      sameSite: "Lax", // Prevent CSRF attacks
     };
 
-    res.setHeader(
-      "Set-Cookie",
-      `at=${token}; maxAge=${options.expires}; httpOnly=true;`
-    ); 
+    res.cookie("at", token, options);
 
-    // res.status(200).cookie("at", token, options).json({
-    //   success: true,
-    //   at: token,
-    //   user: true,
-    // });
     res.status(200).json({
       success: true,
       at: token,

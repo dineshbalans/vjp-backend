@@ -49,15 +49,19 @@ export const isAuthenticatedUser = async (req, res, next) => {
 export const isAuthenticatedAdminUser = async (req, res, next) => {
   const { at } = req.cookies;
 
+  const allCookies  = document.cookie
+console.log('cookie')
+  console.log(allCookies);
+
   console.log("Checking authentication...");
   console.log("Token:", at);
 
-  if (!at) {
-    console.log("No token found, redirecting to login");
-    return next(
-      new AppError("Login first to access this resource", BADREQUEST)
-    );
-  }
+  // if (!at) {
+  //   console.log("No token found, redirecting to login");
+  //   return next(
+  //     new AppError("Login first to access this resource", BADREQUEST)
+  //   );
+  // }
 
   try {
     const decoded = jwt.verify(at, process.env.JWT_SECRET);
