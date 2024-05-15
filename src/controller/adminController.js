@@ -28,7 +28,7 @@ export const getDashboard = async (req, res, next) => {
       )
     );
   } catch (err) {
-    return next(new  AppError(  "Something went wrong", BADREQUEST));
+    return next(new AppError("Something went wrong", BADREQUEST));
   }
 };
 
@@ -72,7 +72,17 @@ export const loginAdmin = async (req, res, next) => {
       httpOnly: true,
     };
 
-    res.status(200).cookie("at", token, options).json({
+    res.setHeader(
+      "Set-Cookie",
+      `at=${token}; maxAge=${options.expires}; httpOnly=true;`
+    ); 
+
+    // res.status(200).cookie("at", token, options).json({
+    //   success: true,
+    //   at: token,
+    //   user: true,
+    // });
+    res.status(200).json({
       success: true,
       at: token,
       user: true,
@@ -87,7 +97,7 @@ export const getAdminProfile = async (req, res, next) => {
 
   if (!at) {
     return next(
-      new AppError(  "Login first to assess this resource", BADREQUEST)
+      new AppError("Login first to assess this resource", BADREQUEST)
     );
   }
 
@@ -100,7 +110,7 @@ export const getAdminProfile = async (req, res, next) => {
       user: true,
     });
   } catch (error) {
-    return next(new AppError(  "Invalid or expired token", BADREQUEST));
+    return next(new AppError("Invalid or expired token", BADREQUEST));
   }
 };
 
@@ -110,5 +120,5 @@ export const logoutAdmin = async (req, res, next) => {
     httpOnly: true,
   });
 
-  return next(new AppSuccess(  { user: false }, "Logout successfully", SUCCESS));
+  return next(new AppSuccess({ user: false }, "Logout successfully", SUCCESS));
 };
