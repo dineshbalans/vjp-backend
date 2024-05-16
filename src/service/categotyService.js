@@ -8,11 +8,7 @@ export const getAll = async () => {
   const result = await Category.find({}).populate("items");
   return result;
 };
-export const getAllName = async () => {
-  const result = await Category.find({});
-  return result;
-};
-
+ 
 export const getOne = async (id) => {
   const result = await Category.findOne({ _id: id });
   return result;
@@ -65,7 +61,9 @@ export const removeSub = async (categoryID, subCategoryID) => {
       (item) => item._id.toString() !== subCategoryID
     );
     await category.save();
-    return { isDeleted: true };
+    // return { isDeleted: true };
+    return  category.subCategorys;
+
   } else {
     return null;
   }

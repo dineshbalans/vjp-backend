@@ -5,7 +5,6 @@ import {
   deleteCategory,
   deleteSubCategory,
   getCategories,
-  getCategoriesNames,
   getCategory,
   updateCategory,
   updateSubCategory,
@@ -17,9 +16,6 @@ const router = Router();
 // admin
 
 router.route("/category/create").post(isAuthenticatedAdminUser, CreateCategory);
-router
-  .route("/categories/list")
-  .get(isAuthenticatedAdminUser, getCategoriesNames);
 
 router
   .route("/category/update/:id")
@@ -27,7 +23,7 @@ router
 router
   .route("/category/delete/:id")
   .delete(isAuthenticatedAdminUser, deleteCategory);
-  router
+router
   .route("/category/:categoryID/create")
   .put(isAuthenticatedAdminUser, createSubCategory);
 router
@@ -37,6 +33,7 @@ router
   .route("/category/:categoryID/:subCategoryID/delete")
   .delete(isAuthenticatedAdminUser, deleteSubCategory);
 // common
+
 router.route("/categories").get(getCategories);
 router.route("/category/:id").get(getCategory);
 

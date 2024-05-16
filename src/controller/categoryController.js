@@ -3,7 +3,7 @@ import {
   add,
   createSub,
   getAll,
-  getAllName,
+ 
   getOne,
   remove,
   removeSub,
@@ -116,17 +116,7 @@ export const getCategorieswithSearch = async (req, res, next) => {
   }
 };
 
-export const getCategoriesNames = async (req, res, next) => {
-  const categories = await getAllName();
-  if (categories) {
-    return next(
-      new AppSuccess(categories, "Categories successfully Send", SUCCESS)
-    );
-  } else {
-    return next(new AppError("No categories found", NOTFOUND));
-  }
-};
-
+ 
 export const createSubCategory = async (req, res, next) => {
   const { categoryID } = req.params;
   const { name } = req.body;
