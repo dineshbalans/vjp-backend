@@ -1,10 +1,12 @@
 import _ from "lodash";
 import {
   add,
+  createSub,
   getAll,
   getAllName,
   getOne,
   remove,
+  removeSub,
   update,
   updateSub,
 } from "../service/categotyService.js";
@@ -125,6 +127,37 @@ export const getCategoriesNames = async (req, res, next) => {
   }
 };
 
+export const createSubCategory = async (req, res, next) => {
+  const { categoryID } = req.params;
+  const { name } = req.body;
+
+  const category = await getOne(categoryID);
+  if (!category) {
+    return next(new AppError("Category not found", NOTFOUND));
+  }
+
+  let alreadyExists = false;
+
+  category.subCategorys.forEach((item) => {
+    if (item.name === name) {
+      alreadyExists = true;
+      return next(new AppError("Sub Category already exists", BADREQUEST));
+    }
+  });
+
+  if (!alreadyExists) {
+    const updatedOne = await createSub(categoryID, name);
+
+    if (updatedOne) {
+      return next(
+        new AppSuccess(updatedOne, "Sub Category created successfully", SUCCESS)
+      );
+    } else {
+      return next(new AppError("Failed to create subcategory", BADREQUEST));
+    }
+  }
+};
+
 export const updateSubCategory = async (req, res, next) => {
   const { categoryID, subCategoryID } = req.params;
   const { name } = req.body;
@@ -132,9 +165,27 @@ export const updateSubCategory = async (req, res, next) => {
 
   if (updatedOne) {
     return next(
-      new AppSuccess(updatedOne, "Categories successfully Send", SUCCESS)
+      new AppSuccess(
+        updatedOne,
+        "Sub Category Updated successfully Send",
+        SUCCESS
+      )
     );
   } else {
-    return next(new AppError("No categories found", NOTFOUND));
+    return next(new AppError("No Sub category found", NOTFOUND));
+  }
+};
+
+export const deleteSubCategory = async (req, res, next) => {
+  const { categoryID, subCategoryID } = req.params;
+
+  const updatedOne = await removeSub(categoryID, subCategoryID);
+
+  if (updatedOne) {
+    return next(
+      new AppSuccess(updatedOne, "Sub Category removed successfully", SUCCESS)
+    );
+  } else {
+    return next(new AppError("No Sub category found", NOTFOUND));
   }
 };

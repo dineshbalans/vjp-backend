@@ -1,7 +1,9 @@
 import { Router } from "express";
 import {
   CreateCategory,
+  createSubCategory,
   deleteCategory,
+  deleteSubCategory,
   getCategories,
   getCategoriesNames,
   getCategory,
@@ -25,10 +27,15 @@ router
 router
   .route("/category/delete/:id")
   .delete(isAuthenticatedAdminUser, deleteCategory);
-
+  router
+  .route("/category/:categoryID/create")
+  .put(isAuthenticatedAdminUser, createSubCategory);
 router
   .route("/category/:categoryID/:subCategoryID/update")
   .put(isAuthenticatedAdminUser, updateSubCategory);
+router
+  .route("/category/:categoryID/:subCategoryID/delete")
+  .delete(isAuthenticatedAdminUser, deleteSubCategory);
 // common
 router.route("/categories").get(getCategories);
 router.route("/category/:id").get(getCategory);
