@@ -6,6 +6,7 @@ import {
   getOne,
   remove,
   update,
+  updateSub,
 } from "../service/categotyService.js";
 import AppSuccess from "../utils/response-handlers/app-success.js";
 import {
@@ -24,7 +25,10 @@ export const CreateCategory = async (req, res, next) => {
     return next(new AppError("Something went wrong At Data", BADREQUEST));
   }
 
+  let categoryName = req.body.title.toLowerCase().trim().split(" ").join("-");
+  req.body.category = categoryName;
   let categoryData = req.body;
+
   const category = await add(categoryData);
   const categories = await getAll();
 
@@ -115,6 +119,20 @@ export const getCategoriesNames = async (req, res, next) => {
   if (categories) {
     return next(
       new AppSuccess(categories, "Categories successfully Send", SUCCESS)
+    );
+  } else {
+    return next(new AppError("No categories found", NOTFOUND));
+  }
+};
+
+export const updateSubCategory = async (req, res, next) => {
+  const { categoryID, subCategoryID } = req.params;
+  const { name } = req.body;
+  const updatedOne = await updateSub(categoryID, subCategoryID, name);
+
+  if (updatedOne) {
+    return next(
+      new AppSuccess(updatedOne, "Categories successfully Send", SUCCESS)
     );
   } else {
     return next(new AppError("No categories found", NOTFOUND));

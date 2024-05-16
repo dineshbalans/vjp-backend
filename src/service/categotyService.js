@@ -5,7 +5,7 @@ export const add = async (data) => {
 };
 
 export const getAll = async () => {
-  const result = await Category.find({}).populate('items');
+  const result = await Category.find({}).populate("items");
   return result;
 };
 export const getAllName = async () => {
@@ -23,6 +23,22 @@ export const update = async (id, data) => {
     new: true,
     runValidators: true,
   });
+  return result;
+};
+
+export const updateSub = async (categoryID, subCategoryID, name) => {
+  const category = await Category.findOne({ _id: categoryID });
+
+  category?.subCategorys?.map((item) => {
+    console.log(item);
+    if (item?._id.toString() === subCategoryID) {
+      console.log(item, subCategoryID);
+      item.name = name;
+    }
+  });
+
+  const result = await category.save();
+
   return result;
 };
 

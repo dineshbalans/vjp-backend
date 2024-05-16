@@ -6,6 +6,7 @@ import {
   getCategoriesNames,
   getCategory,
   updateCategory,
+  updateSubCategory,
 } from "./../controller/categoryController.js";
 import { isAuthenticatedAdminUser } from "../utils/middlewares/authenticate.js";
 
@@ -25,6 +26,9 @@ router
   .route("/category/delete/:id")
   .delete(isAuthenticatedAdminUser, deleteCategory);
 
+router
+  .route("/category/:categoryID/:subCategoryID/update")
+  .put(isAuthenticatedAdminUser, updateSubCategory);
 // common
 router.route("/categories").get(getCategories);
 router.route("/category/:id").get(getCategory);
