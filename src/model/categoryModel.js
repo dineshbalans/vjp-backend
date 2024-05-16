@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 
-const categorySchema =new mongoose.Schema({
-  
+const categorySchema = new mongoose.Schema({
   category: {
     type: String,
   },
@@ -21,7 +20,7 @@ const categorySchema =new mongoose.Schema({
   ],
   subCategorys: [
     {
-      type: String,
+      name: String,
     },
   ],
   isTopCategory: {

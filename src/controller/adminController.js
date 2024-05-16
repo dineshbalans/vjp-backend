@@ -139,12 +139,12 @@ export const getAdminProfile = async (req, res, next) => {
     return next(new AppError("Invalid or expired token", BADREQUEST));
   }
 };
-
+ 
 export const logoutAdmin = async (req, res, next) => {
   // res.cookie("at", null, {
   //   expires: new Date(Date.now()),
   //   httpOnly: true,
-  // });
+  // });  
 
   const options = {
     expires: new Date(Date.now()),
