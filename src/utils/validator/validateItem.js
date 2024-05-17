@@ -10,5 +10,7 @@ export const validateCreateItem = Joi.object().keys({
     discountPercentage: Joi.number().required(),
     stock: Joi.number().required(),
     subCategoryId: Joi.string().optional(),
-    // highlights: Joi.array().required(),
+    isSale: Joi.boolean().optional(),
+    isTrending: Joi.boolean().optional(),
+    highlights: Joi.object().optional(),
 });

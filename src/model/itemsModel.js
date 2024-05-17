@@ -58,7 +58,7 @@ const itemSchema = mongoose.Schema({
   //   },
   // ],
   highlights: {
-    type: String,
+    type: Object,
   },
 
   isSale: {
