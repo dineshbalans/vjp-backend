@@ -1,8 +1,6 @@
 import mongoose from "mongoose";
 
 const itemSchema = mongoose.Schema({
-
-  
   itemId: {
     type: String,
   },
@@ -24,6 +22,14 @@ const itemSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  category: {
+    type: String,
+    required: true
+  },
+  subCategoryId: {
+    type: String,
+    required: true,
+  },
   actualPrice: {
     type: Number,
     required: true,
@@ -34,16 +40,21 @@ const itemSchema = mongoose.Schema({
     required: true,
   },
 
+  // highlights: [
+  //   {
+  //     key: {
+  //       type: String,
+  //       required: true,
+  //     },
+  //     value: {
+  //       type: String,
+  //       required: true,
+  //     },
+  //   },
+  // ],
   highlights: [
     {
-      key: {
-        type: String,
-        required: true,
-      },
-      value: {
-        type: String,
-        required: true,
-      },
+      type: String,
     },
   ],
 
@@ -61,7 +72,6 @@ const itemSchema = mongoose.Schema({
     default: Date.now,
   },
 });
-
 
 const Item = mongoose.model("Item", itemSchema);
 export default Item;

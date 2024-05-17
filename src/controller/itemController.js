@@ -11,12 +11,32 @@ import APIFeatures from "../utils/api/apiFeatures.js";
 export const CreateItem = async (req, res, next) => {
   let images = [];
 
+  let BASE_URL = `${req.protocol}://${req.get("host")}`;
+
   if (req?.files?.length > 0) {
     req.files.forEach((file) => {
-      let url = `${process.env.BACKEND_URL}/uploads/item/${file.originalname}`;
-      images.push({ image: url });
+      let url = `${BASE_URL}/uploads/item/${file.originalname}`;
+      images.push(url);
     });
   }
+
+  console.log(req.body.subCategory);
+  let data = req.body.subCategory.split("/");
+  req.body.category = data[0];
+  req.body.subCategoryId = data[1];
+
+  const category = await getCategory(req.body.category);
+
+  const subCategoryName = category.subCategorys.find(
+    (subCategory) => subCategory._id == req.body.subCategoryId
+  );
+
+  let text = category.category.toLowerCase().trim().split(" ").join("-");
+  +"/" + subCategoryName.name.toLowerCase().trim().split(" ").join("-");
+
+  req.body.subCategory = text;
+
+  console.log(text)
 
   req.body.itemImage = images;
 
@@ -28,11 +48,11 @@ export const CreateItem = async (req, res, next) => {
   }
 
   let itemData = req.body;
-  const category = await getCategory(req.body.category);
   const item = await add(itemData);
 
-  category[0].items.push(item);
-  await category[0].save();
+  console.log("category", category);
+  category?.items?.push(item);
+  await category?.save();
 
   if (item) {
     return next(new AppSuccess(category, "Item created successfully", SUCCESS));

@@ -8,13 +8,18 @@ import {
 } from "../controller/itemController.js";
 import multer from "multer";
 import { isAuthenticatedAdminUser } from "../utils/middlewares/authenticate.js";
+import path from "path";
+import { fileURLToPath } from "url";
 
+// Fix for __dirname not defined in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const router = Router();
 
 const upload = multer({
   storage: multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, path.join(__dirname, "..", "uploads/users"));
+      cb(null, path.join(__dirname, "..", "uploads/item"));
     },
     filename: function (req, file, cb) {
       cb(null, file.originalname);
