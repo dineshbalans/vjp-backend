@@ -21,32 +21,29 @@ export const CreateItem = async (req, res, next) => {
     });
   }
 
-  console.log(req.body);
-
-  console.log(req.body.subCategory);
+ 
+ 
   let data = req.body.subCategory.split("/");
 
   const category = await getCategory(data[0]);
-  console.log(category);
-
+  
   const subCategoryName = category.subCategorys.find(
     (subCategory) => subCategory._id.toString() === data[1]
   );
-  console.log("subCategoryName", subCategoryName);
+  
 
   let text =
     category.category.toLowerCase().trim().split(" ").join("-") +
     "/" +
     subCategoryName.name.toLowerCase().trim().split(" ").join("-");
-
-  console.log(subCategoryName.name);
+ 
   req.body.subCategory = text;
 
-  console.log(text);
+ 
 
   req.body.itemImage = images;
   req.body.category = data[0];
-  // console.log(data[1]);
+ 
   req.body.subCategoryId = data[1];
 
   // item.save
@@ -61,7 +58,7 @@ export const CreateItem = async (req, res, next) => {
   let itemData = req.body;
   const item = await add(itemData);
 
-  console.log("category", category);
+   
   category?.items?.push(item);
   await category?.save();
 
