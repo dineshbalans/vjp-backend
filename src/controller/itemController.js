@@ -41,7 +41,7 @@ export const CreateItem = async (req, res, next) => {
 
  
 
-  req.body.itemImage = images;
+  req.body.images = images;
   req.body.category = data[0];
  
   req.body.subCategoryId = data[1];
@@ -89,7 +89,7 @@ export const updateItem = async (req, res, next) => {
     });
   }
 
-  req.body.itemImage = images;
+  req.body.images = images;
 
   const category = await update(id, req.body);
   if (category) {

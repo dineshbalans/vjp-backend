@@ -12,7 +12,7 @@ const itemSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  itemImage: [
+  images: [
     {
       type: String,
       required: true,
