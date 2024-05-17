@@ -13,6 +13,7 @@ export const CreateItem = async (req, res, next) => {
 
   let BASE_URL = `${req.protocol}://${req.get("host")}`;
 
+  console.log(req.files)
   if (req?.files?.length > 0) {
     req.files.forEach((file) => {
       let url = `${BASE_URL}/uploads/item/${file.originalname}`;
@@ -65,7 +66,7 @@ export const CreateItem = async (req, res, next) => {
   await category?.save();
 
   if (item) {
-    return next(new AppSuccess(category, "Item created successfully", SUCCESS));
+    return next(new AppSuccess(item, "Item created successfully", SUCCESS));
   } else {
     return next(new AppError("Something went wrong", BADREQUEST));
   }
