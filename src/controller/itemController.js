@@ -20,30 +20,40 @@ export const CreateItem = async (req, res, next) => {
     });
   }
 
+  console.log(req.body);
+
   console.log(req.body.subCategory);
   let data = req.body.subCategory.split("/");
-  req.body.category = data[0];
-  req.body.subCategoryId = data[1];
 
-  const category = await getCategory(req.body.category);
+  const category = await getCategory(data[0]);
+  console.log(category);
 
   const subCategoryName = category.subCategorys.find(
-    (subCategory) => subCategory._id == req.body.subCategoryId
+    (subCategory) => subCategory._id.toString() === data[1]
   );
+  console.log("subCategoryName", subCategoryName);
 
-  let text = category.category.toLowerCase().trim().split(" ").join("-");
-  +"/" + subCategoryName.name.toLowerCase().trim().split(" ").join("-");
+  let text =
+    category.category.toLowerCase().trim().split(" ").join("-") +
+    "/" +
+    subCategoryName.name.toLowerCase().trim().split(" ").join("-");
 
+  console.log(subCategoryName.name);
   req.body.subCategory = text;
 
-  console.log(text)
+  console.log(text);
 
   req.body.itemImage = images;
+  req.body.category = data[0];
+  // console.log(data[1]);
+  req.body.subCategoryId = data[1];
+
+  // item.save
 
   const { error } = validateCreateItem.validate(req.body);
 
   if (error) {
-    console.log("invalid request " + error.message);
+    console.log("invalid request " + error);
     return next(new AppError("Something went wrong", BADREQUEST));
   }
 
