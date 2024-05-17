@@ -12,5 +12,5 @@ export const validateCreateItem = Joi.object().keys({
     subCategoryId: Joi.string().optional(),
     isSale: Joi.boolean().optional(),
     isTrending: Joi.boolean().optional(),
-    highlights: Joi.optional(),
+    highlights: Joi.string().optional(),
 });

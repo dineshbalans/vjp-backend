@@ -59,7 +59,7 @@ const itemSchema = mongoose.Schema({
   //   },
   // ],
   highlights: {
-    type: Object,
+    type: String,
   },
 
   isSale: {
