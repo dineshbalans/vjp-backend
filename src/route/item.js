@@ -31,10 +31,10 @@ const upload = multer({
 
 router
   .route("/item/create")
-  .post(isAuthenticatedAdminUser, upload.array("images"), CreateItem);
+  .post(isAuthenticatedAdminUser, upload.array("itemImage"), CreateItem);
 router
   .route("/item/update/:id")
-  .put(isAuthenticatedAdminUser, upload.array("images"), updateItem);
+  .put(isAuthenticatedAdminUser, upload.array("itemImage"), updateItem);
 router.route("/item/delete/:id").delete(isAuthenticatedAdminUser, deleteItem);
 
 // common
