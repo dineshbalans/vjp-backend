@@ -26,12 +26,10 @@ const itemSchema = mongoose.Schema({
     type: String,
 
     required: true,
-
   },
   subCategoryId: {
     type: String,
     required: true,
-
   },
   actualPrice: {
     type: Number,
@@ -59,11 +57,9 @@ const itemSchema = mongoose.Schema({
   //     },
   //   },
   // ],
-  highlights: [
-    {
-      type: String,
-    },
-  ],
+  highlights: {
+    type: String,
+  },
 
   isSale: {
     type: Boolean,
