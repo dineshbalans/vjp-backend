@@ -8,6 +8,7 @@ export const validateCreateItem = Joi.object().keys({
     subCategory: Joi.string().required(),
     actualPrice: Joi.number().required(),
     discountPercentage: Joi.number().required(),
+    stock: Joi.number().required(),
     // subCategoryId: Joi.string().required(),
     // highlights: Joi.array().required(),
 });

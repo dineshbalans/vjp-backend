@@ -40,6 +40,10 @@ const itemSchema = mongoose.Schema({
     required: true,
   },
 
+  stock: {
+    type: Number,
+    required:true,
+  },
   // highlights: [
   //   {
   //     key: {
