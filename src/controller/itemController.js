@@ -87,7 +87,7 @@ export const updateItem = async (req, res, next) => {
 
   console.log(typeof req?.body?.existingImages)
   if (req?.body?.existingImages?.length > 0) {
-    req.body.existingImages.forEach((image) => {
+    req?.body?.existingImages?.forEach((image) => {
       images.push(image);
     });
   }
