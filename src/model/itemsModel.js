@@ -24,9 +24,9 @@ const itemSchema = mongoose.Schema({
     required: true,
   },
   category: {
-    type: String,
-
-    required: true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Category",
+  
   },
   subCategoryId: {
     type: String,
@@ -80,6 +80,4 @@ const itemSchema = mongoose.Schema({
 const Item = mongoose.model("Item", itemSchema);
 export default Item;
 
-//  highlights
-
-// product stock
+ 
