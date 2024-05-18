@@ -142,7 +142,7 @@ export const updateItem = async (req, res, next) => {
       req.body.category = newCategory._id;
       req.body.subCategoryId = data[1];
     } else {
-      const currentCategory = await Category.findById(data[0]);
+      const currentCategory = await getCategory(data[0]);
       const subCategoryName = currentCategory.subCategorys.find(
         (subCategory) => subCategory._id.toString() === data[1]
       );
