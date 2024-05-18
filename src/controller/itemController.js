@@ -105,7 +105,7 @@ export const updateItem = async (req, res, next) => {
     let data = req.body.subCategory.split("/");
     if (data[0] !== String(oldItem.category)) {
       // Remove item from old category's items
-      const oldCategory = await Category.findById(oldItem.category);
+      const oldCategory = await getCategory(oldItem.category);
       if (oldCategory) {
         oldCategory.items = oldCategory.items.filter(
           (item) => item.toString() !== id
@@ -114,7 +114,7 @@ export const updateItem = async (req, res, next) => {
       }
 
       // Add item to new category's items
-      const newCategory = await Category.findById(data[0]);
+      const newCategory = await getCategory(data[0]);
       if (!newCategory) {
         return next(new AppError("New category not found", 404));
       }
