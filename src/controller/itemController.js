@@ -85,8 +85,10 @@ export const updateItem = async (req, res, next) => {
   //   images = req.body.images;
   // }
 
-  console.log(typeof req?.body?.existingImages)
-  if (req?.body?.existingImages?.length > 0) {
+  console.log(typeof req?.body?.existingImages);
+  if (typeof req?.body?.existingImages === "string") {
+    images.push(req?.body?.existingImages);
+  } else if (req?.body?.existingImages?.length > 0) {
     req?.body?.existingImages?.forEach((image) => {
       images.push(image);
     });
@@ -98,7 +100,7 @@ export const updateItem = async (req, res, next) => {
   if (req?.files?.length > 0) {
     req.files.forEach((file) => {
       let url = `${BASE_URL}/uploads/item/${file.originalname}`;
-      images.push(url);  
+      images.push(url);
     });
   }
 
@@ -342,7 +344,7 @@ export const getItem = async (req, res, next) => {
 
 export const deleteItem = async (req, res, next) => {
   const { id } = req.params;
-  
+
   if (_.isEmpty(id)) {
     return next(new AppError("Item id is required", 400));
   }
@@ -363,7 +365,9 @@ export const deleteItem = async (req, res, next) => {
   if (item.category) {
     const category = await getCategory(item.category);
     if (category) {
-      category.items = category.items.filter(itemId => itemId.toString() !== id);
+      category.items = category.items.filter(
+        (itemId) => itemId.toString() !== id
+      );
       await category.save();
     }
   }
