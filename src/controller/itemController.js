@@ -85,7 +85,7 @@ export const updateItem = async (req, res, next) => {
   //   images = req.body.images;
   // }
 
-  if (req.body.existingImages.length > 0) {
+  if (req?.body?.existingImages?.length > 0) {
     req.body.existingImages.forEach((image) => {
       images.push(image);
     });
@@ -103,8 +103,10 @@ export const updateItem = async (req, res, next) => {
 
   if (req.body.subCategory) {
     let data = req.body.subCategory.split("/");
-    if (data[0] !== String(oldItem.category)) {
+    if (data[0] !== oldItem.category.toString()) {
       // Remove item from old category's items
+
+      console.log(data[0], oldItem.category);
       const oldCategory = await getCategory(oldItem.category);
       if (oldCategory) {
         oldCategory.items = oldCategory.items.filter(
@@ -339,7 +341,7 @@ export const getItem = async (req, res, next) => {
 
 export const deleteItem = async (req, res, next) => {
   const { id } = req.params;
-
+  
   if (_.isEmpty(id)) {
     return next(new AppError("Item id is required", 400));
   }
@@ -358,11 +360,9 @@ export const deleteItem = async (req, res, next) => {
 
   // Remove the item reference from the category
   if (item.category) {
-    const category = await Category.findById(item.category);
+    const category = await getCategory(item.category);
     if (category) {
-      category.items = category.items.filter(
-        (itemId) => itemId.toString() !== id
-      );
+      category.items = category.items.filter(itemId => itemId.toString() !== id);
       await category.save();
     }
   }
