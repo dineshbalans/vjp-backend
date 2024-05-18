@@ -77,12 +77,18 @@ export const updateItem = async (req, res, next) => {
 
   let images = [];
 
-  // If imagesCleared is false, keep the old images
-  if (req.body.imagesCleared === "false") {
-    images = oldItem.images;
-  } else if (req.body.images && Array.isArray(req.body.images)) {
-    // If the user has provided a list of remaining images
-    images = req.body.images;
+  // // If imagesCleared is false, keep the old images
+  // if (req.body.imagesCleared === "false") {
+  //   images = oldItem.images;
+  // } else if (req.body.images && Array.isArray(req.body.images)) {
+  //   // If the user has provided a list of remaining images
+  //   images = req.body.images;
+  // }
+
+  if (req.body.existingImages.length > 0) {
+    req.body.existingImages.forEach((image) => {
+      images.push(image);
+    });
   }
 
   let BASE_URL = `${req.protocol}://${req.get("host")}`;
@@ -91,7 +97,7 @@ export const updateItem = async (req, res, next) => {
   if (req?.files?.length > 0) {
     req.files.forEach((file) => {
       let url = `${BASE_URL}/uploads/item/${file.originalname}`;
-      images.push(url); // Directly push the URL string
+      images.push(url);  
     });
   }
 
@@ -101,7 +107,9 @@ export const updateItem = async (req, res, next) => {
       // Remove item from old category's items
       const oldCategory = await Category.findById(oldItem.category);
       if (oldCategory) {
-        oldCategory.items = oldCategory.items.filter((item) => item.toString() !== id);
+        oldCategory.items = oldCategory.items.filter(
+          (item) => item.toString() !== id
+        );
         await oldCategory.save();
       }
 
@@ -121,7 +129,15 @@ export const updateItem = async (req, res, next) => {
         return next(new AppError("Subcategory not found in new category", 404));
       }
 
-      let text = `${newCategory.category.toLowerCase().trim().split(" ").join("-")}/${subCategoryName.name.toLowerCase().trim().split(" ").join("-")}`;
+      let text = `${newCategory.category
+        .toLowerCase()
+        .trim()
+        .split(" ")
+        .join("-")}/${subCategoryName.name
+        .toLowerCase()
+        .trim()
+        .split(" ")
+        .join("-")}`;
       req.body.subCategory = text;
       req.body.category = newCategory._id;
       req.body.subCategoryId = data[1];
@@ -135,7 +151,15 @@ export const updateItem = async (req, res, next) => {
         return next(new AppError("Subcategory not found", 404));
       }
 
-      let text = `${currentCategory.category.toLowerCase().trim().split(" ").join("-")}/${subCategoryName.name.toLowerCase().trim().split(" ").join("-")}`;
+      let text = `${currentCategory.category
+        .toLowerCase()
+        .trim()
+        .split(" ")
+        .join("-")}/${subCategoryName.name
+        .toLowerCase()
+        .trim()
+        .split(" ")
+        .join("-")}`;
       req.body.subCategory = text;
       req.body.category = data[0];
       req.body.subCategoryId = data[1];
@@ -170,7 +194,6 @@ export const updateItem = async (req, res, next) => {
 
 //   let BASE_URL = `${req.protocol}://${req.get("host")}`;
 
-  
 //   if (req?.files?.length > 0) {
 //     req.files.forEach((file) => {
 //       let url = `${BASE_URL}/uploads/item/${file.originalname}`;
@@ -253,7 +276,6 @@ export const updateItem = async (req, res, next) => {
 //   }
 // };
 
-  
 export const getItems = async (req, res, next) => {
   const resPerPage = 12;
   let buildQuery = () => {

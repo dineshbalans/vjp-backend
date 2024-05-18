@@ -34,7 +34,7 @@ router
   .post(isAuthenticatedAdminUser, upload.array("images"), CreateItem);
 router
   .route("/item/update/:id")
-  .put(isAuthenticatedAdminUser, upload.array("images"), updateItem);
+  .put(isAuthenticatedAdminUser, upload.array("newImages"), updateItem);
 router.route("/item/delete/:id").delete(isAuthenticatedAdminUser, deleteItem);
 
 // common
