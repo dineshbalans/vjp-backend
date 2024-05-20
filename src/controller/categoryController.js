@@ -18,6 +18,7 @@ import {
 } from "../utils/constants/statusCode.js";
 import AppError from "../utils/response-handlers/app-error.js";
 import { validateCreateCategory } from "./../utils/validator/validateCategory.js";
+import Item from "../model/itemsModel.js";
 
 export const CreateCategory = async (req, res, next) => {
   const { error } = validateCreateCategory.validate(req.body);
@@ -86,20 +87,44 @@ export const getCategory = async (req, res, next) => {
   }
 };
 
+// export const deleteCategory = async (req, res, next) => {
+//   const { id } = req.params;
+//   if (_.isEmpty(id)) {
+//     return next(new AppError("Category id is required", BADREQUEST));
+//   }
+//   const category = await remove(id);
+
+//   if (category) {
+//     return next(
+//       new AppSuccess(category, "Category Deleted successfully", SUCCESS)
+//     );
+//   } else {
+//     return next(new AppError("Something went wrong", BADREQUEST));
+//   }
+// };
+
 export const deleteCategory = async (req, res, next) => {
   const { id } = req.params;
-  if (_.isEmpty(id)) {
-    return next(new AppError("Category id is required", BADREQUEST));
-  }
-  const category = await remove(id);
 
-  if (category) {
-    return next(
-      new AppSuccess(category, "Category Deleted successfully", SUCCESS)
-    );
-  } else {
-    return next(new AppError("Something went wrong", BADREQUEST));
+  if (_.isEmpty(id)) {
+    return next(new AppError("Category id is required", 400));
   }
+
+  const category = await getOne(id);
+  if (!category) {
+    return next(new AppError("Category not found", 404));
+  }
+
+  // Delete all items under this category
+  const items = await Item.find({ category: id });
+  for (let item of items) {
+    await Item.findByIdAndDelete(item._id);
+  }
+
+  // Delete the category
+  await remove(id);
+
+  return next(new AppSuccess(category, "Category and its items deleted successfully", 200));
 };
 
 export const getCategorieswithSearch = async (req, res, next) => {
@@ -166,16 +191,50 @@ export const updateSubCategory = async (req, res, next) => {
   }
 };
 
+// export const deleteSubCategory = async (req, res, next) => {
+//   const { categoryID, subCategoryID } = req.params;
+
+//   const updatedOne = await removeSub(categoryID, subCategoryID);
+
+//   if (updatedOne) {
+//     return next(
+//       new AppSuccess(updatedOne, "Sub Category removed successfully", SUCCESS)
+//     );
+//   } else {
+//     return next(new AppError("No Sub category found", NOTFOUND));
+//   }
+// };
+
+
 export const deleteSubCategory = async (req, res, next) => {
   const { categoryID, subCategoryID } = req.params;
 
+  if (_.isEmpty(categoryID) || _.isEmpty(subCategoryID)) {
+    return next(new AppError("Category ID and Subcategory ID are required", 400));
+  }
+
+  const category = await getOne(categoryID);
+  if (!category) {
+    return next(new AppError("Category not found", 404));
+  }
+
+  const subCategoryIndex = category.subCategorys.findIndex(sub => sub._id.toString() === subCategoryID);
+  if (subCategoryIndex === -1) {
+    return next(new AppError("Subcategory not found in the specified category", 404));
+  }
+
+  // Remove items associated with this subcategory
+  const items = await Item.find({ subCategoryId: subCategoryID });
+  for (let item of items) {
+    await Item.findByIdAndDelete(item._id);
+  }
+
+  // Remove the subcategory from the category
+  // category.subCategorys.splice(subCategoryIndex, 1);
+  // await category.save();
+
   const updatedOne = await removeSub(categoryID, subCategoryID);
 
-  if (updatedOne) {
-    return next(
-      new AppSuccess(updatedOne, "Sub Category removed successfully", SUCCESS)
-    );
-  } else {
-    return next(new AppError("No Sub category found", NOTFOUND));
-  }
+
+  return next(new AppSuccess(updatedOne, "Subcategory and its items removed successfully", 200));
 };
