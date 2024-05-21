@@ -61,7 +61,11 @@ export const verifyUser = async (req, res, next) => {
     console.log("Verification email sent to:", email);
 
     return next(
-      new AppSuccess(token, "Email verification successfully sent", SUCCESS)
+      new AppSuccess(
+        "verfication sent",
+        "Email verification successfully sent",
+        SUCCESS
+      )
     );
   } catch (err) {
     console.error("Error during user verification:", err);
