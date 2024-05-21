@@ -34,8 +34,7 @@ export const verifyUser = async (req, res, next) => {
 
     // Check if the user already exists
     const alreadyExists = await verifyUserCheck(email);
-    console.log("User existence check result:", alreadyExists);
-
+  
     if (alreadyExists) {
       return next(new AppError("User already exists", BADREQUEST));
     }
@@ -44,16 +43,13 @@ export const verifyUser = async (req, res, next) => {
     const token = generateToken(email);
     req.body.token = token;
 
-           // Save the new user data
-           const newUser = await add(req.body);
-           console.log("New user created:", newUser);
-       
+    // Save the new user data
+    const newUser = await add(req.body);
  
     // Construct the activation link
     const BASE_URL = `${req.protocol}://${req.get("host")}`;
     const activationLink = `${BASE_URL}/api/v1/signin/${token}`;
-    console.log("Activation link generated:", activationLink);
-
+   
     // Send the verification email
     await sendEmail({
       email: email,
@@ -123,8 +119,6 @@ const InsertUsertoUser = async (token, req, res, next) => {
         <a href="${activationLink}">${activationLink}</a>
       `,
     });
-
-
 
     await removeVerifyUser(token);
 
