@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-async function testEmail() {
+export default async function sendEmail(options) {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -14,18 +14,16 @@ async function testEmail() {
 
   const message = {
     from: `${process.env.SMTP_FROM_NAME} <${process.env.SMTP_FROM_EMAIL}>`,
-    to: "recipient@example.com",
-    subject: "Test Email",
-    html: "<h1>Hello World</h1>",
+    to: options.email,
+    subject: options.subject,
+    html: options.html,
   };
 
   transporter.sendMail(message, (err, info) => {
     if (err) {
-      console.error('Error sending email:', err);
+      console.error("Error sending email:", err);
     } else {
-      console.log('Email sent:', info.response);
+      console.log("Email sent:", info.response);
     }
   });
 }
-
-testEmail();

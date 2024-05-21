@@ -6,7 +6,7 @@ import {
   verifyUserToken,
 } from "../service/verifyUserService.js";
 import { BADREQUEST, SUCCESS } from "../utils/constants/statusCode.js";
-import { sendEmail } from "../utils/mail/sendEmail.js";
+ import sendEmail from "../utils/mail/sendEmail.js";
 import AppError from "../utils/response-handlers/app-error.js";
 import AppSuccess from "../utils/response-handlers/app-success.js";
 import { validateVerifyUser } from "../utils/validator/validateVerifyUser.js";
