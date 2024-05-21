@@ -5,6 +5,6 @@ import { InsertUser, verifyUser } from "../controller/verifyUserController.js";
 const router = Router();
 
 router.route("/verify").post(verifyUser);
-router.route("/verify/:token").post(InsertUser);
+router.route("/verify/:token").get(InsertUser);
 
 export default router
