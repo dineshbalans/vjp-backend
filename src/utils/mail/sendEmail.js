@@ -19,7 +19,7 @@ export default async function sendEmail(options) {
     html: options.html,
   };
 
-  transporter.sendMail(message, (err, info) => {
+  await transporter.sendMail(message, (err, info) => {
     if (err) {
       console.error("Error sending email:", err);
     } else {
