@@ -1,8 +1,5 @@
 import mongoose from "mongoose";
-
 import jwt from "jsonwebtoken";
-
-import crypto from "crypto";
 import bcrypt from "bcryptjs";
 
 const passwordValidator = (value) => {
@@ -11,13 +8,8 @@ const passwordValidator = (value) => {
 };
 
 const verifyUserSchema = new mongoose.Schema({
-  userId: {
-    type: String,
-  },
   email: {
     type: String,
-    required: true,
-    unique: true,
     trim: true,
     lowercase: true,
   },
@@ -75,7 +67,6 @@ const verifyUserSchema = new mongoose.Schema({
   token: {
     type: String,
   },
-
   createdAt: {
     type: Date,
     default: Date.now,

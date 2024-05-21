@@ -21,10 +21,11 @@ function generateToken(email) {
 
 export const verifyUser = async (req, res, next) => {
   try {
-    console.log("Received verification request");
+    
 
     // Validate the request body
     const { error } = validateVerifyUser.validate(req.body);
+
     if (error) {
       console.log("Invalid request: " + error.message);
       return next(new AppError("Invalid request data", BADREQUEST));
@@ -33,7 +34,10 @@ export const verifyUser = async (req, res, next) => {
     const { email } = req.body;
 
     // Check if the user already exists
+    console.log('email',email)
     const alreadyExists = await verifyUserCheck(email);
+    console.log(alreadyExists,'alreadyExists')
+
   
     if (alreadyExists) {
       return next(new AppError("User already exists", BADREQUEST));
@@ -45,6 +49,8 @@ export const verifyUser = async (req, res, next) => {
 
     // Save the new user data
     const newUser = await add(req.body);
+
+    console.log(newUser)
  
     // Construct the activation link
     const BASE_URL = `${req.protocol}://${req.get("host")}`;

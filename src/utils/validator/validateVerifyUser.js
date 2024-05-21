@@ -1,7 +1,7 @@
 import Joi from "joi";
 
 export const validateVerifyUser = Joi.object().keys({
-  email: Joi.string().email().required(),
+  email: Joi.string().required(),
   pswd: Joi.string().required(),
   gstNum: Joi.string().required(),
   fName: Joi.string().required(),
