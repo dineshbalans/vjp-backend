@@ -1,5 +1,6 @@
-import { add } from "../service/userService.js";
+import { add as addUser } from "../service/userService.js";
 import {
+  add,
   removeVerifyUser,
   verifyUserCheck,
   verifyUserToken,
@@ -43,6 +44,10 @@ export const verifyUser = async (req, res, next) => {
     const token = generateToken(email);
     req.body.token = token;
 
+           // Save the new user data
+           const newUser = await add(req.body);
+           console.log("New user created:", newUser);
+       
  
     // Construct the activation link
     const BASE_URL = `${req.protocol}://${req.get("host")}`;
@@ -89,7 +94,7 @@ const InsertUsertoUser = async (token, req, res, next) => {
     console.log("Verified user:", verifyUser);
 
     console.log("pass", verifyUser);
-    const user = await add({
+    const user = await addUser({
       email: verifyUser.email,
       pswd: verifyUser.pswd,
       fName: verifyUser.fName,
@@ -119,7 +124,7 @@ const InsertUsertoUser = async (token, req, res, next) => {
       `,
     });
 
- 
+
 
     await removeVerifyUser(token);
 
