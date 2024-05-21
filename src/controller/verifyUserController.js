@@ -34,8 +34,7 @@ export const verifyUser = async (req, res, next) => {
 
     const { email ,fName,lName} = req.body;
 
-    // Check if the user already exists
-    console.log('email',email)
+    
     const alreadyExists = await verifyUserCheck(email);
     console.log(alreadyExists,'alreadyExists')
 
