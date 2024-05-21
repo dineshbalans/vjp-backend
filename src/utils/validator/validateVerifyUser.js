@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-export const validateCreateUser = Joi.object().keys({
+export const validateVerifyUser = Joi.object().keys({
   email: Joi.string().email().required(),
   pswd: Joi.string().required(),
   gstNum: Joi.string().required(),

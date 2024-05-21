@@ -10,7 +10,7 @@ import itemRoute from "./src/route/item.js";
 import adminRoute from "./src/route/admin.js";
 import orderRoute from "./src/route/order.js";
 import globalResponseController from "./src/utils/response-handlers/global-response-controller.js";
-
+import verifyUserRoute from './src/route/verifyUser.js'
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -76,7 +76,7 @@ app.use("/api/v1", userRoute);
 app.use("/api/v1", itemRoute);
 app.use("/api/v1/admin", adminRoute);
 app.use("/api/v1", orderRoute);
-
+app.use("/api/v1", verifyUserRoute);
 
 
 app.use(globalResponseController);
