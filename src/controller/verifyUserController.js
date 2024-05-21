@@ -7,6 +7,7 @@ import {
 } from "../service/verifyUserService.js";
 import { BADREQUEST, SUCCESS } from "../utils/constants/statusCode.js";
  import sendEmail from "../utils/mail/sendEmail.js";
+import { verifyedSuccess } from "../utils/mail/verifyTemplates.js";
 import AppError from "../utils/response-handlers/app-error.js";
 import AppSuccess from "../utils/response-handlers/app-success.js";
 import { validateVerifyUser } from "../utils/validator/validateVerifyUser.js";
@@ -80,6 +81,10 @@ export const verifyUser = async (req, res, next) => {
 export const InsertUser = async (req, res, next) => {
   try {
     const response = await InsertUsertoUser(req.params.token, req, res, next);
+
+    if(response){
+      return verifyedSuccess()
+    }
     return next(new AppSuccess(response, "User successfully sent", SUCCESS));
   } catch (err) {
     return next(new AppError(err.message, BADREQUEST));
@@ -122,7 +127,7 @@ const InsertUsertoUser = async (token, req, res, next) => {
         <h2>Account Verification Successful</h2>
         <p>Thank you for verifying your account. Your account has been verified.</p>
         <p>Please click the link below to activate your account:</p>
-        <a href="${activationLink}">${activationLink}</a>
+        
       `,
     });
 
