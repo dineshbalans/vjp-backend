@@ -29,7 +29,7 @@ export const verifyUser = async (req, res, next) => {
 
     if (error) {
       console.log("Invalid request: " + error.message);
-      return next(new AppError("Invalid request data", BADREQUEST));
+      return next(new AppError(error.message, BADREQUEST));
     }
 
     const { email ,fName,lName} = req.body;
