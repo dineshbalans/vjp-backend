@@ -43,10 +43,7 @@ export const verifyUser = async (req, res, next) => {
     const token = generateToken(email);
     req.body.token = token;
 
-    // Save the new user data
-    const newUser = await add(req.body);
-    console.log("New user created:", newUser);
-
+ 
     // Construct the activation link
     const BASE_URL = `${req.protocol}://${req.get("host")}`;
     const activationLink = `${BASE_URL}/api/v1/signin/${token}`;
@@ -121,6 +118,8 @@ const InsertUsertoUser = async (token, req, res, next) => {
         <a href="${activationLink}">${activationLink}</a>
       `,
     });
+
+ 
 
     await removeVerifyUser(token);
 
