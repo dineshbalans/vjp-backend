@@ -48,7 +48,7 @@ export const verifyUser = async (req, res, next) => {
  
     // Construct the activation link
     const BASE_URL = `${req.protocol}://${req.get("host")}`;
-    const activationLink = `${BASE_URL}/api/v1/signin/${token}`;
+    const activationLink = `${BASE_URL}/api/v1/verify/${token}`;
    
     // Send the verification email
     await sendEmail({
