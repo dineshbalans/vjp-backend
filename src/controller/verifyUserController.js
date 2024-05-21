@@ -7,7 +7,7 @@ import {
 } from "../service/verifyUserService.js";
 import { BADREQUEST, SUCCESS } from "../utils/constants/statusCode.js";
  import sendEmail from "../utils/mail/sendEmail.js";
-import { verifyedSuccess } from "../utils/mail/verifyTemplates.js";
+import { verifyRequest, verifyedSuccess } from "../utils/mail/verifyTemplates.js";
 import AppError from "../utils/response-handlers/app-error.js";
 import AppSuccess from "../utils/response-handlers/app-success.js";
 import { validateVerifyUser } from "../utils/validator/validateVerifyUser.js";
@@ -32,7 +32,7 @@ export const verifyUser = async (req, res, next) => {
       return next(new AppError("Invalid request data", BADREQUEST));
     }
 
-    const { email } = req.body;
+    const { email ,fName,lName} = req.body;
 
     // Check if the user already exists
     console.log('email',email)
@@ -61,7 +61,7 @@ export const verifyUser = async (req, res, next) => {
     await sendEmail({
       email: email,
       subject: "VJP Email Verification Request",
-      html: `Activate Link - ${activationLink}`,
+      html:  verifyRequest(activationLink,fName,lName),
     });
     console.log("Verification email sent to:", email);
 

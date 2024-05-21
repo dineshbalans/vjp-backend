@@ -1,4 +1,4 @@
-const verifyRequest = () => {
+const verifyRequest = (activationLink, fName, lName) => {
   return `
     <!DOCTYPE html>
 
@@ -201,7 +201,7 @@ const verifyRequest = () => {
 <tr>
 <td class="pad" style="padding-bottom:10px;padding-top:20px;">
 <div style="color:#393d47;direction:ltr;font-family:Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;font-size:16px;font-weight:400;letter-spacing:0px;line-height:150%;text-align:left;mso-line-height-alt:24px;">
-<p style="margin: 0; margin-bottom: 16px;">Hi ${first_name},</p>
+<p style="margin: 0; margin-bottom: 16px;">Hi ${fName + " " + lName},</p>
 <p style="margin: 0;">We're excited to have you on board! You're almost set to start enjoying VJP Enterprises. Simply click the link below to verify your email address and get started. The link expires in 60 minutes.</p>
 </div>
 </td>
@@ -215,7 +215,7 @@ const verifyRequest = () => {
 <w:anchorlock/>
 <v:textbox inset="0px,0px,0px,0px">
 <center style="color:#ffffff; font-family:Tahoma, sans-serif; font-size:16px">
-<![endif]--><a href="https://example.com" style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#4d4997;border-radius:0px;width:auto;border-top:1px solid #4D4997;font-weight:400;border-right:1px solid #4D4997;border-bottom:1px solid #4D4997;border-left:1px solid #4D4997;padding-top:5px;padding-bottom:5px;font-family:Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;font-size:16px;text-align:center;mso-border-alt:none;word-break:keep-all;" target="_blank"><span style="padding-left:20px;padding-right:20px;font-size:16px;display:inline-block;letter-spacing:normal;"><span style="word-break: break-word; line-height: 32px;">Confirm</span></span></a><!--[if mso]></center></v:textbox></v:roundrect><![endif]--></div>
+<![endif]--><a href=${activationLink} style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#4d4997;border-radius:0px;width:auto;border-top:1px solid #4D4997;font-weight:400;border-right:1px solid #4D4997;border-bottom:1px solid #4D4997;border-left:1px solid #4D4997;padding-top:5px;padding-bottom:5px;font-family:Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;font-size:16px;text-align:center;mso-border-alt:none;word-break:keep-all;" target="_blank"><span style="padding-left:20px;padding-right:20px;font-size:16px;display:inline-block;letter-spacing:normal;"><span style="word-break: break-word; line-height: 32px;">Confirm</span></span></a><!--[if mso]></center></v:textbox></v:roundrect><![endif]--></div>
 </td>
 </tr>
 </table>
@@ -301,4 +301,4 @@ const verifyedSuccess = () => {
 
 const verifyedFailed = () => {};
 
-export { verifyedSuccess, verifyedFailed };
+export { verifyRequest, verifyedSuccess, verifyedFailed };
