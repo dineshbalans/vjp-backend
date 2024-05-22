@@ -16,7 +16,7 @@ export const CreateItem = async (req, res, next) => {
   console.log(req.files);
   if (req?.files?.length > 0) {
     req.files.forEach((file) => {
-      let url = `${BASE_URL}/uploads/item/${file.originalname}`;
+      let url = `${BASE_URL}/src/uploads/item/${file.originalname}`;
       images.push(url);
     });
   }
@@ -99,7 +99,7 @@ export const updateItem = async (req, res, next) => {
   // Add new images if there are any
   if (req?.files?.length > 0) {
     req.files.forEach((file) => {
-      let url = `${BASE_URL}/uploads/item/${file.originalname}`;
+      let url = `${BASE_URL}/src/uploads/item/${file.originalname}`;
       images.push(url);
     });
   }

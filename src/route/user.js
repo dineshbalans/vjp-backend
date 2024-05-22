@@ -6,6 +6,7 @@ import {
   getUser,
   getUsers,
   loginUser,
+  myProfile,
   resetPassword,
   updateEmailOrPassword,
   updateUser,
@@ -29,6 +30,8 @@ router.route("/user/delete/:id").delete(isAuthenticatedAdminUser, deleteUser);
 router.route("/user/register").post(CreateUser);
 router.route("/user/login").post(loginUser);
 router.route("/user/update/:id").put(isAuthenticatedUser, updateUser);
+
+router.route("/user/profile/me").get(isAuthenticatedUser, myProfile);
 
 router
   .route("/user/email-password/update")
