@@ -11,17 +11,23 @@ import APIFeatures from "../utils/api/apiFeatures.js";
 export const CreateItem = async (req, res, next) => {
   let images = [];
 
+  const { error } = validateCreateItem.validate(req.body);
+
+  if (error) {
+    console.log("invalid request " + error);
+    return next(new AppError("Something went wrong", BADREQUEST));
+  }
+
+  let data = req.body.subCategory.split("/");
   let BASE_URL = `${req.protocol}://${req.get("host")}`;
 
   console.log(req.files);
   if (req?.files?.length > 0) {
     req.files.forEach((file) => {
-      let url = `${BASE_URL}/src/uploads/item/${file.originalname}`;
+      let url = `${BASE_URL}/src/uploads/${data[0]}/${req.body.itemTitle}/${file.originalname}`;
       images.push(url);
     });
   }
-
-  let data = req.body.subCategory.split("/");
 
   const category = await getCategory(data[0]);
 
@@ -42,13 +48,6 @@ export const CreateItem = async (req, res, next) => {
   req.body.subCategoryId = data[1];
 
   // item.save
-
-  const { error } = validateCreateItem.validate(req.body);
-
-  if (error) {
-    console.log("invalid request " + error);
-    return next(new AppError("Something went wrong", BADREQUEST));
-  }
 
   let itemData = req.body;
   const item = await add(itemData);
@@ -99,7 +98,8 @@ export const updateItem = async (req, res, next) => {
   // Add new images if there are any
   if (req?.files?.length > 0) {
     req.files.forEach((file) => {
-      let url = `${BASE_URL}/src/uploads/item/${file.originalname}`;
+      // let url = `${BASE_URL}/src/uploads/item/${file.originalname}`;
+      let url = `${BASE_URL}/src/uploads/${data[0]}/${req.body.itemTitle}/${file.originalname}`;
       images.push(url);
     });
   }
@@ -328,8 +328,6 @@ export const getItem = async (req, res, next) => {
   }
 };
 
- 
-
 export const deleteItem = async (req, res, next) => {
   const { id } = req.params;
 
@@ -343,9 +341,8 @@ export const deleteItem = async (req, res, next) => {
     return next(new AppError("Item not found", 404));
   }
 
-
-   // Remove the item reference from the category
-   if (item.category) {
+  // Remove the item reference from the category
+  if (item.category) {
     const category = await getCategory(item.category);
     if (category) {
       category.items = category.items.filter(
@@ -360,8 +357,6 @@ export const deleteItem = async (req, res, next) => {
   if (!deletedItem) {
     return next(new AppError("Something went wrong", 400));
   }
-
- 
 
   return next(new AppSuccess(deletedItem, "Item Deleted successfully", 200));
 };
