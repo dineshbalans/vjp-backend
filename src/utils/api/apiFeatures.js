@@ -16,6 +16,18 @@ class APIFeatures {
     return this;
   }
 
+  // basedSubcategorySearch() {
+  //   if (this.queryStr.subcategory) {
+  //     this.query = this.query.find({
+  //       subcategory: {
+  //         $regex: this.queryStr.subcategory,
+  //         $options: "i",
+  //       },
+  //     });
+  //   }
+  //   return this;
+  // }
+
   sortWithDate() {
     if (this.queryStr.from && this.queryStr.to) {
       const parts = this.queryStr.from.split("-");

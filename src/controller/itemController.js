@@ -282,29 +282,27 @@ export const updateItem = async (req, res, next) => {
 // };
 
 export const getItems = async (req, res, next) => {
-  const resPerPage = 12;
-  let buildQuery = () => {
-    return new APIFeatures(Item.find(), req.query); //.search()
-  };
+  // const resPerPage = 12;
+ 
+  
+  // const totalItemsCount = await Item.countDocuments({});
 
-  const filterdItemsCount = await buildQuery().query.countDocuments();
+  // let itemsCount = totalItemsCount;
 
-  const totalItemsCount = await Item.countDocuments({});
+  // if (filterdItemsCount !== totalItemsCount) {
+  //   itemsCount = filterdItemsCount;
+  // }
 
-  let itemsCount = totalItemsCount;
+  // const items = await buildQuery().paginate(resPerPage).query;
+  const items = await getAll()
 
-  if (filterdItemsCount !== totalItemsCount) {
-    itemsCount = filterdItemsCount;
-  }
-
-  const items = await buildQuery().paginate(resPerPage).query;
 
   // const items = await getAll();
 
   if (items) {
     return next(
       new AppSuccess(
-        { itemsCount: itemsCount, resPerPage: resPerPage, items: items },
+        { itemsCount: items.length,  items: items },
         "Items successfully Send",
         SUCCESS
       )
