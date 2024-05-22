@@ -115,6 +115,22 @@ export const myProfile = async (req, res, next) => {
     return next(new AppError("An error occurred while fetching the user", 500));
   }
 };
+
+export const logoutUser = async (req, res, next) => {
+  const options = {
+    expires: new Date(Date.now()),
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax", // Adjust SameSite attribute based on environment
+  };
+
+  res.cookie("vjpuser", null, options);
+
+  res.status(200).json({
+    success: true,
+    user: false,
+  });
+};
 export const deleteUser = async (req, res, next) => {
   const { id } = req.params;
   if (_.isEmpty(id)) {
