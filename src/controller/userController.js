@@ -104,20 +104,10 @@ export const getUser = async (req, res, next) => {
 };
 export const myProfile = async (req, res, next) => {
   try {
-    const userId = req.user?._id;
-
-    console.log(req.user.email);
-
-    if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
-      return next(new AppError("Invalid User ID", 400));
-    }
-
-    const user = await getProfile(req.user?.email);
-
-    console.log(user,'user')
-
-    if (user) {
-      return res.status(200).send(new AppSuccess(user, "User successfully sent", 200));
+    if (req.user) {
+      return res
+        .status(200)
+        .send(new AppSuccess(req.user, "User successfully sent", 200));
     } else {
       return next(new AppError("User not found", 404));
     }
