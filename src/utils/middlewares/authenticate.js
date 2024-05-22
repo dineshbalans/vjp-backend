@@ -4,15 +4,15 @@ import { BADREQUEST } from "./../constants/statusCode.js";
 import AppError from "./../response-handlers/app-error.js";
 
 export const isAuthenticatedUser = async (req, res, next) => {
-  const { token } = req.cookies;
+  const { vjpuser } = req.cookies;
 
-  console.log('token from middleware',token)
-  if (!token) {
+  console.log('token from middleware',vjpuser)
+  if (!vjpuser) {
     return next(new AppError("Login first to access this resource", 400));
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(vjpuser, process.env.JWT_SECRET);
 
     if (!decoded.id) {
       return next(new AppError("Invalid token", 400));

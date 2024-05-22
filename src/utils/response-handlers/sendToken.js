@@ -25,7 +25,7 @@ export const sendToken = async (res, user, message, statusCode) => {
     statusCode: statusCode,
     token,
     message: message,
-    // user,
+    user,
   });
 };
 
