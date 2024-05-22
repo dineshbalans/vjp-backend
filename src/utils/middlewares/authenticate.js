@@ -5,25 +5,31 @@ import AppError from "./../response-handlers/app-error.js";
 
 export const isAuthenticatedUser = async (req, res, next) => {
   const { token } = req.cookies;
-  console.log("user");
 
   if (!token) {
-    return next(
-      new AppError("Login first to assess this resource", BADREQUEST)
-    );
+    return next(new AppError("Login first to access this resource", 400));
   }
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    req.user = await getOne(decoded.id);
+    if (!decoded.id) {
+      return next(new AppError("Invalid token", 400));
+    }
+
+    const user = await getOne(decoded.id);
+
+    if (!user) {
+      return next(new AppError("User not found", 404));
+    }
+
+    req.user = user;
 
     next();
   } catch (error) {
-    return AppError("Invalid or expired token", BADREQUEST);
+    return next(new AppError("Invalid or expired token", 400));
   }
 };
-
 // export const isAuthenticatedAdminUser = async (req, res, next) => {
 //   const { at } = req.cookies;
 
