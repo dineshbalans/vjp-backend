@@ -16,17 +16,50 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const router = Router();
 
+// const upload = multer({
+//   storage: multer.diskStorage({
+//     destination: function (req, file, cb) {
+//       cb(null, path.join(__dirname, "..", "uploads/item"));
+//     },
+//     filename: function (req, file, cb) {
+//       cb(null, file.originalname);
+//     },
+//   }),
+// })
+
+const createDirectory = (dirPath) => {
+  if (!fs.existsSync(dirPath)) {
+    fs.mkdirSync(dirPath, { recursive: true });
+  }
+};
+
 const upload = multer({
   storage: multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, path.join(__dirname, "..", "uploads/item"));
+      // Extract category and itemTitle from the request body
+      const { category, itemTitle } = req.body;
+
+      // Construct the dynamic folder path
+      const uploadPath = path.join(
+        __dirname,
+        "..",
+        "uploads",
+        category,
+        itemTitle
+      );
+
+      // Create the directory if it doesn't exist
+      createDirectory(uploadPath);
+
+      // Set the destination folder
+      cb(null, uploadPath);
     },
     filename: function (req, file, cb) {
+      // Use the original filename
       cb(null, file.originalname);
-    },  
+    },
   }),
-})
-
+});
 // Admin
 
 router
