@@ -21,7 +21,8 @@ export const getAll = async () => {
 };
 
 export const getOne = async (id) => {
-  const result = await User.findOne({ _id: id }).populate("wishList");
+  console.log(id)
+  const result = await User.findById(id).populate("wishList");
   return result;
 };
 

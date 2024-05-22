@@ -107,7 +107,7 @@ export const myProfile = async (req, res, next) => {
     if (req.user) {
       return res
         .status(200)
-        .send(new AppSuccess(req.user, "User successfully sent", 200));
+        .send(new AppSuccess(req.user, "User successfully sent here", 200));
     } else {
       return next(new AppError("User not found", 404));
     }

@@ -6,6 +6,7 @@ import AppError from "./../response-handlers/app-error.js";
 export const isAuthenticatedUser = async (req, res, next) => {
   const { token } = req.cookies;
 
+  console.log('token from middleware',token)
   if (!token) {
     return next(new AppError("Login first to access this resource", 400));
   }
@@ -17,6 +18,8 @@ export const isAuthenticatedUser = async (req, res, next) => {
       return next(new AppError("Invalid token", 400));
     }
 
+    console.log('decoded.id',typeof decoded.id)
+
     const user = await getOne(decoded.id);
 
     if (!user) {
@@ -24,7 +27,6 @@ export const isAuthenticatedUser = async (req, res, next) => {
     }
 
     req.user = user;
-
     next();
   } catch (error) {
     return next(new AppError("Invalid or expired token", 400));
