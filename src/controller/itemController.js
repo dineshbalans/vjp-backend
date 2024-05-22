@@ -328,19 +328,7 @@ export const getItem = async (req, res, next) => {
   }
 };
 
-// export const deleteItem = async (req, res, next) => {
-//   const { id } = req.params;
-//   if (_.isEmpty(id)) {
-//     return next(new AppError("Item id is required", BADREQUEST));
-//   }
-//   const item = await remove(id);
-
-//   if (item) {
-//     return next(new AppSuccess(item, "Item Deleted successfully", SUCCESS));
-//   } else {
-//     return next(new AppError("Something went wrong", BADREQUEST));
-//   }
-// };
+ 
 
 export const deleteItem = async (req, res, next) => {
   const { id } = req.params;
@@ -350,19 +338,14 @@ export const deleteItem = async (req, res, next) => {
   }
 
   // Fetch the item to get the associated category
-  const item = await Item.findById(id);
+  const item = await getOne(id);
   if (!item) {
     return next(new AppError("Item not found", 404));
   }
 
-  // Remove the item
-  const deletedItem = await Item.findByIdAndDelete(id);
-  if (!deletedItem) {
-    return next(new AppError("Something went wrong", 400));
-  }
 
-  // Remove the item reference from the category
-  if (item.category) {
+   // Remove the item reference from the category
+   if (item.category) {
     const category = await getCategory(item.category);
     if (category) {
       category.items = category.items.filter(
@@ -371,6 +354,14 @@ export const deleteItem = async (req, res, next) => {
       await category.save();
     }
   }
+
+  // Remove the item
+  const deletedItem = await remove(id);
+  if (!deletedItem) {
+    return next(new AppError("Something went wrong", 400));
+  }
+
+ 
 
   return next(new AppSuccess(deletedItem, "Item Deleted successfully", 200));
 };
