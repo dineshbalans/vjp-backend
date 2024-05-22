@@ -24,6 +24,7 @@ export const CreateItem = async (req, res, next) => {
   console.log(req.files);
   if (req?.files?.length > 0) {
     req.files.forEach((file) => {
+      // let url = `${BASE_URL}/src/uploads/item/${file.originalname}`;
       let url = `${BASE_URL}/src/uploads/${data[0]}/${req.body.itemTitle}/${file.originalname}`;
       images.push(url);
     });
