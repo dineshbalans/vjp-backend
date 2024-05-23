@@ -56,10 +56,21 @@ export const verifyUser = async (req, res, next) => {
     const activationLink = `${BASE_URL}/api/v1/verify/${token}`;
 
     // Send the verification email
+    // await sendEmail({
+    //   email: email,
+    //   subject: "VJP Email Verification Request",
+    //   html: verifyRequest(activationLink, fName, lName),
+    // });
+
     await sendEmail({
       email: email,
       subject: "VJP Email Verification Request",
-      html: verifyRequest(activationLink, fName, lName),
+      template: "verifyRequest", // Template name without the extension
+      context: {
+        name: `${newUser?.fName} ${newUser?.lName}`,
+        verificationLink: activationLink,
+        BASE_URL: BASE_URL,
+      },
     });
     console.log("Verification email sent to:", email);
 
