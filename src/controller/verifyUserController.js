@@ -56,10 +56,21 @@ export const verifyUser = async (req, res, next) => {
     const activationLink = `${BASE_URL}/api/v1/verify/${token}`;
 
     // Send the verification email
+    // await sendEmail({
+    //   email: email,
+    //   subject: "VJP Email Verification Request",
+    //   html: verifyRequest(activationLink, fName, lName),
+    // });
+
     await sendEmail({
       email: email,
       subject: "VJP Email Verification Request",
-      html: verifyRequest(activationLink, fName, lName),
+      template: "verifyRequest",
+      context: {
+        name: `${newUser?.fName} ${newUser?.lName}`,
+        verificationLink: activationLink,
+        BASE_URL: BASE_URL,
+      },
     });
     console.log("Verification email sent to:", email);
 
@@ -89,6 +100,19 @@ export const InsertUser = async (req, res, next) => {
     //   return res.status(200).json(new AppSuccess(response, "User successfully sent", 200));
     // }
     // return next(new AppSuccess(response, "User successfully sent", SUCCESS));
+    
+    const BASE_URL = `${req.protocol}://${req.get("host")}`;
+
+    await sendEmail({
+      email: response.email,
+      subject: "VJP Account Verification Success",
+      template: "verifySuccess",
+      context: {
+        name: `${response?.fName} ${response?.lName}`,
+        BASE_URL: BASE_URL,
+      },
+    });
+
     if (response) {
       const htmlContent = verifyedSuccess(response.fName, response.lName);
       return res.status(200).send(htmlContent);
@@ -130,15 +154,15 @@ const InsertUsertoUser = async (token, req, res, next) => {
 
     // const BASE_URL = `${req.protocol}://${req.get("host")}`;
     // const activationLink = `${BASE_URL}/api/v1/activate/${token}`;
-    await sendEmail({
-      email: verifyUser.email,
-      subject: "VJP Account Verification Success",
-      html: `
-        <h2>Account Verification Successful</h2>
-        <p>Thank you for verifying your account. Your account has been verified.</p>
-        <p>Please click the link below to activate your account:</p>
-      `,
-    });
+    // await sendEmail({
+    //   email: verifyUser.email,
+    //   subject: "VJP Account Verification Success",
+    //   html: `
+    //     <h2>Account Verification Successful</h2>
+    //     <p>Thank you for verifying your account. Your account has been verified.</p>
+    //     <p>Please click the link below to activate your account:</p>
+    //   `,
+    // });
 
     await removeVerifyUser(token);
 

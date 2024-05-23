@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   CreateUser,
+  clearAllWishList,
   deleteUser,
   forgotPassword,
   getUser,
@@ -46,6 +47,9 @@ router.route("/user/password/reset/:token").post(resetPassword);
 router
   .route("/user/wishlist/:productId")
   .put(isAuthenticatedUser, wishListAddOrRemove);
+  router
+  .route("/user/clear/wishlist")
+  .put(isAuthenticatedUser, clearAllWishList);
 
  
 

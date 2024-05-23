@@ -70,6 +70,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/src/uploads", express.static(path.join(__dirname, "src/uploads")));
+app.use('/public', express.static(path.join(__dirname, 'public')));
 
 app.use("/api/v1", categoryRoute);
 app.use("/api/v1", userRoute);
