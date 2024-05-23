@@ -152,7 +152,7 @@ const InsertUsertoUser = async (token, req, res, next) => {
     // });
 
     await sendEmail({
-      email: email,
+      email: verifyUser.email,
       subject: "VJP Account Verification Success",
       template: "verifySuccess",  
       context: {
