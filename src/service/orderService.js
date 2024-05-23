@@ -38,10 +38,10 @@ export const remove = async (id) => {
 
 export const getMyAllOrders = async (id) => {
   const result = await Order.find({ user: id })
-    .populate({
-      path: "user",
-      model: "User",
-    })
+    // .populate({
+    //   path: "user",
+    //   model: "User",
+    // })
     .populate({
       path: "product.item",
       model: "Item",

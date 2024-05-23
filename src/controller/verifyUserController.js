@@ -7,10 +7,7 @@ import {
 } from "../service/verifyUserService.js";
 import { BADREQUEST, SUCCESS } from "../utils/constants/statusCode.js";
 import sendEmail from "../utils/mail/sendEmail.js";
-import {
-  verifyRequest,
-  verifyedSuccess,
-} from "../utils/mail/verifyTemplates.js";
+import { verifyedSuccess } from "../utils/mail/verifyTemplates.js";
 import AppError from "../utils/response-handlers/app-error.js";
 import AppSuccess from "../utils/response-handlers/app-success.js";
 import { validateVerifyUser } from "../utils/validator/validateVerifyUser.js";
@@ -100,7 +97,7 @@ export const InsertUser = async (req, res, next) => {
     //   return res.status(200).json(new AppSuccess(response, "User successfully sent", 200));
     // }
     // return next(new AppSuccess(response, "User successfully sent", SUCCESS));
-    
+
     const BASE_URL = `${req.protocol}://${req.get("host")}`;
 
     await sendEmail({
@@ -114,7 +111,11 @@ export const InsertUser = async (req, res, next) => {
     });
 
     if (response) {
-      const htmlContent = verifyedSuccess(response.fName, response.lName);
+      const htmlContent = verifyedSuccess(
+        BASE_URL,
+        response.fName,
+        response.lName
+      );
       return res.status(200).send(htmlContent);
     }
 
