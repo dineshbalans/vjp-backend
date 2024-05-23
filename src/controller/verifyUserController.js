@@ -141,14 +141,24 @@ const InsertUsertoUser = async (token, req, res, next) => {
 
     // const BASE_URL = `${req.protocol}://${req.get("host")}`;
     // const activationLink = `${BASE_URL}/api/v1/activate/${token}`;
+    // await sendEmail({
+    //   email: verifyUser.email,
+    //   subject: "VJP Account Verification Success",
+    //   html: `
+    //     <h2>Account Verification Successful</h2>
+    //     <p>Thank you for verifying your account. Your account has been verified.</p>
+    //     <p>Please click the link below to activate your account:</p>
+    //   `,
+    // });
+
     await sendEmail({
-      email: verifyUser.email,
+      email: email,
       subject: "VJP Account Verification Success",
-      html: `
-        <h2>Account Verification Successful</h2>
-        <p>Thank you for verifying your account. Your account has been verified.</p>
-        <p>Please click the link below to activate your account:</p>
-      `,
+      template: "verifySuccess",  
+      context: {
+        name: `${newUser?.fName} ${newUser?.lName}`,
+        BASE_URL: BASE_URL,
+      },
     });
 
     await removeVerifyUser(token);
