@@ -65,7 +65,7 @@ export const verifyUser = async (req, res, next) => {
     await sendEmail({
       email: email,
       subject: "VJP Email Verification Request",
-      template: "verifyRequest", // Template name without the extension
+      template: "verifyRequest",  
       context: {
         name: `${newUser?.fName} ${newUser?.lName}`,
         verificationLink: activationLink,

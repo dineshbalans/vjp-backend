@@ -302,3 +302,16 @@ export const wishListAddOrRemove = async (req, res, next) => {
     return next(new AppError(err.message, BADREQUEST));
   }
 };
+
+export const clearAllWishList = async (req, res, next) => {
+  try {
+    const user = await getOne(req.user._id);
+    user.wishList = [];
+    await user.save();
+    return next(
+      new AppSuccess(user, "Wish list cleared successfully", SUCCESS)
+    );
+  } catch (err) {
+    return next(new AppError(err.message, BADREQUEST));
+  }
+};
