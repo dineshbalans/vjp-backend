@@ -65,7 +65,7 @@ export const verifyUser = async (req, res, next) => {
     await sendEmail({
       email: email,
       subject: "VJP Email Verification Request",
-      template: "verifyRequest",  
+      template: "verifyRequest",
       context: {
         name: `${newUser?.fName} ${newUser?.lName}`,
         verificationLink: activationLink,
@@ -100,6 +100,19 @@ export const InsertUser = async (req, res, next) => {
     //   return res.status(200).json(new AppSuccess(response, "User successfully sent", 200));
     // }
     // return next(new AppSuccess(response, "User successfully sent", SUCCESS));
+    
+    const BASE_URL = `${req.protocol}://${req.get("host")}`;
+
+    await sendEmail({
+      email: response.email,
+      subject: "VJP Account Verification Success",
+      template: "verifySuccess",
+      context: {
+        name: `${response?.fName} ${response?.lName}`,
+        BASE_URL: BASE_URL,
+      },
+    });
+
     if (response) {
       const htmlContent = verifyedSuccess(response.fName, response.lName);
       return res.status(200).send(htmlContent);
@@ -150,16 +163,6 @@ const InsertUsertoUser = async (token, req, res, next) => {
     //     <p>Please click the link below to activate your account:</p>
     //   `,
     // });
-
-    await sendEmail({
-      email: verifyUser.email,
-      subject: "VJP Account Verification Success",
-      template: "verifySuccess",  
-      context: {
-        name: `${newUser?.fName} ${newUser?.lName}`,
-        BASE_URL: BASE_URL,
-      },
-    });
 
     await removeVerifyUser(token);
 
