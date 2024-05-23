@@ -28,90 +28,158 @@
         </a>
     </div> --}}
 
-    <html lang="en">
-      <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>conformation mail</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-          rel="stylesheet"
+ <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Email Confirmation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+      body {
+        background-color: #f6f6f6;
+        font-family: "Poppins", sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        width: 100%;
+        max-width: 600px;
+        margin: 30px auto;
+        background-color: #ffffff;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+      .header,
+      .footer {
+        text-align: center;
+        padding: 20px;
+        background-color: #f6f6f6;
+      }
+      .header img {
+        max-width: 100%;
+        height: auto;
+      }
+      .title {
+        font-size: 24px;
+        text-align: center;
+        color: #333333;
+        margin: 20px 0;
+      }
+      .content {
+        padding: 20px;
+      }
+      .content p {
+        font-size: 16px;
+        color: #555555;
+        line-height: 1.6;
+        margin: 10px 0;
+      }
+      .content .welcome {
+        font-size: 18px;
+        color: #333333;
+      }
+      .button-container {
+        text-align: center;
+        margin: 30px 0;
+      }
+      .button-container .btn {
+        padding: 12px 40px;
+        background-color: #007bff;
+        color: #ffffff;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+      }
+      .media-container {
+        text-align: center;
+        margin: 20px 0;
+      }
+      .media-container .fa-brands {
+        font-size: 24px;
+        color: #007bff;
+        margin: 0 10px;
+      }
+      .footer p {
+        font-size: 14px;
+        color: #777777;
+        margin: 0;
+      }
+      @media only screen and (max-width: 600px) {
+        .container {
+          width: 90%;
+        }
+        .header img {
+          width: 80%;
+        }
+        .content {
+          padding: 10px;
+        }
+        .content p {
+          font-size: 14px;
+        }
+        .button-container .btn {
+          font-size: 14px;
+          padding: 10px 30px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <img
+          src="{{BASE_URL}}/src/uploads/templateImages/VJPlogo.png"
+          alt="VJP Logo"
         />
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-          integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
-          crossorigin="anonymous"
-          referrerpolicy="no-referrer"
-        />
-        <style>
-          body { background-color: #f6f6f6; } .container { width: 40%; margin: 0
-          auto; margin-top: 30px; margin-bottom: 60px; border: 1px solid wheat;
-          font-family: "Poppins", sans-serif; padding: 20px; background-color:
-          white; } .image-container { width: 80%; height: 100%; margin: auto;
-          margin-top: 30px; } .logo { width: 100%; } .title { text-align:
-          center; margin-top: 30px; } .mail-logo-container { width: 100%;
-          height: 400px; display: flex; justify-content: center; align-items:
-          center; } .mail-logo { width: auto; height: 300px; } .media-container{
-          display: flex; justify-content: center; align-items: center; padding:
-          30px; } .fa-brands{ font-size: 40px; margin: 0px 30px; } @media only
-          screen and (max-width: 1020px) { .container { width: 90%; }
-          .image-container { width: 100%; } .mail-logo { width: 200px
-          !important; height: 200px !important; } } .text-align-center {
-          font-size: 20px; margin-bottom: 50px; } .welcome { font-size: 20px; }
-          .button-container{ display: flex; justify-content: center; } .btn{
-          padding: 10px 40px 10px 40px; background-color: blue; color: white;
-          border: 2px solid transparent; font-size: 22px; border-radius: 2px;
-          margin-bottom: 20px; }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="image-container">
-            <img
-              src="{{BASE_URL}}/src/uploads/templateImages/VJPlogo.png"
-              alt=""
-              class="logo"
-            />
-            <h1 class="title">
-              <b>Confirm your Email</b>
-            </h1>
-            <div class="mail-logo-container">
-              <img
-                src="{{BASE_URL}}/src/uploads/templateImages/confirm.png"
-                alt=""
-                class="logo mail-logo"
-              />
-            </div>
-            <div class="text-body">
-              <p class="welcome">
-                Hello,
-                <b><i>user,</i></b>
-              </p>
-              <div class="text-align-center">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Adipisci omnis excepturi dolorum quos modi asperiores quae id,
-                dolore nam. Possimus!
-              </div>
-              <div class="button-container">
-                <button class="btn">
-                  Confirm
-                </button>
-              </div>
-              <hr />
-              <div class="media-container">
-                <i class="fa-brands fa-facebook"></i>
-                <i class="fa-brands fa-square-instagram"></i>
-              </div>
-              <p style="text-align: center;">
-                2024 &#169; All copyright Reserved to VJP enterprise</p>
-            </div>
-          </div>
+      </div>
+      <div class="content">
+        <h1 class="title">Confirm Your Email</h1>
+        <div style="text-align: center; margin: 20px 0;">
+          <img
+            src="{{BASE_URL}}/src/uploads/templateImages/confirm.png"
+            alt="Confirm Email"
+            style="max-width: 200px; height: auto;"
+          />
         </div>
-      </body>
-    </html>
+        <p class="welcome">Hello, <b>{{name}},</b></p>
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci
+          omnis excepturi dolorum quos modi asperiores quae id, dolore nam.
+          Possimus!
+        </p>
+        <div class="button-container">
+          <a href="#" class="btn">Confirm</a>
+        </div>
+      </div>
+      <div class="footer">
+        <div class="media-container">
+          <a href="#"><i class="fa-brands fa-facebook"></i></a>
+          <a href="#"><i class="fa-brands fa-square-instagram"></i></a>
+        </div>
+        <p>2024 &#169; All rights reserved to VJP Enterprise</p>
+      </div>
+    </div>
+  </body>
+</html>
+
 
     {{!-- 
     <html
