@@ -107,13 +107,29 @@ export const myProfile = async (req, res, next) => {
     if (req.user) {
       return res
         .status(200)
-        .send(new AppSuccess(req.user, "User successfully sent", 200));
+        .send(new AppSuccess(req.user, "User successfully sent here", 200));
     } else {
       return next(new AppError("User not found", 404));
     }
   } catch (error) {
     return next(new AppError("An error occurred while fetching the user", 500));
   }
+};
+
+export const logoutUser = async (req, res, next) => {
+  const options = {
+    expires: new Date(Date.now()),
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax", // Adjust SameSite attribute based on environment
+  };
+
+  res.cookie("vjpuser", null, options);
+
+  res.status(200).json({
+    success: true,
+    user: false,
+  });
 };
 export const deleteUser = async (req, res, next) => {
   const { id } = req.params;

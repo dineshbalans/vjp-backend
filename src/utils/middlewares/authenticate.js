@@ -4,18 +4,21 @@ import { BADREQUEST } from "./../constants/statusCode.js";
 import AppError from "./../response-handlers/app-error.js";
 
 export const isAuthenticatedUser = async (req, res, next) => {
-  const { token } = req.cookies;
+  const { vjpuser } = req.cookies;
 
-  if (!token) {
+  console.log('token from middleware',vjpuser)
+  if (!vjpuser) {
     return next(new AppError("Login first to access this resource", 400));
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(vjpuser, process.env.JWT_SECRET);
 
     if (!decoded.id) {
       return next(new AppError("Invalid token", 400));
     }
+
+    console.log('decoded.id',typeof decoded.id)
 
     const user = await getOne(decoded.id);
 
@@ -24,7 +27,6 @@ export const isAuthenticatedUser = async (req, res, next) => {
     }
 
     req.user = user;
-
     next();
   } catch (error) {
     return next(new AppError("Invalid or expired token", 400));
