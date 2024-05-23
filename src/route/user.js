@@ -48,7 +48,7 @@ router
   .route("/user/wishlist/:productId")
   .put(isAuthenticatedUser, wishListAddOrRemove);
   router
-  .route("/user/wishlist/clear")
+  .route("/user/clear/wishlist")
   .put(isAuthenticatedUser, clearAllWishList);
 
  
