@@ -10,8 +10,10 @@ import {
   getOne,
   update,
 } from "../service/orderService.js";
+import { getOne as getUser } from "../service/userService.js";
 import Order from "../model/orderModel.js";
 import APIFeatures from "../utils/api/apiFeatures.js";
+import sendEmail from "../utils/mail/sendEmail.js";
 
 export const CreateOrder = async (req, res, next) => {
   const { error } = validateCreateOrder.validate(req.body);
@@ -24,18 +26,22 @@ export const CreateOrder = async (req, res, next) => {
   let orderData = req.body;
 
   const order = await add(orderData);
+  let BASE_URL = `${req.protocol}://${req.get("host")}`;
 
   console.log(order);
+  const user = await getUser(order.user);
 
   if (order) {
     await sendEmail({
-      email: email,
+      email: user.email,
       subject: "Order Confirmation",
       template: "orderConfirmed",
       context: {
-        name: `${newUser?.fName} ${newUser?.lName}`,
+        name: `${user?.fName} ${user?.lName}`,
         order: order,
         BASE_URL: BASE_URL,
+        user: user,
+        count: order.product.length
       },
     });
 
