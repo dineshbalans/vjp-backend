@@ -1,3 +1,5 @@
+import { format, parseISO } from "date-fns";
+
 class APIFeatures {
   constructor(query, queryStr) {
     this.query = query;
@@ -28,28 +30,53 @@ class APIFeatures {
   //   return this;
   // }
 
+  // sortWithDate() {
+  //   if (this.queryStr.from && this.queryStr.to) {
+  //     const fromParts = this.queryStr.from.split("-");
+  //     const fromDate = new Date(fromParts[0], fromParts[1] - 1, fromParts[2]);
+
+  //     const toParts = this.queryStr.to.split("-");
+  //     const toDate = new Date(toParts[0], toParts[1] - 1, toParts[2]);
+
+  //     if (fromDate < toDate) {
+  //       this.query = this.query.find({
+  //         createdAt: {
+  //           $gte: fromDate,
+  //           $lte: toDate,
+  //         },
+  //       });
+  //     }
+  //   }
+
+  //   this.query = this.query.sort({ createdAt: -1 });
+  //   return this;
+  // }
+
   sortWithDate() {
     if (this.queryStr.from && this.queryStr.to) {
       const fromParts = this.queryStr.from.split("-");
       const fromDate = new Date(fromParts[0], fromParts[1] - 1, fromParts[2]);
-  
+
       const toParts = this.queryStr.to.split("-");
       const toDate = new Date(toParts[0], toParts[1] - 1, toParts[2]);
-  
-      if (fromDate < toDate) {
-        this.query = this.query.find({
-          createdAt: {
-            $gte: fromDate,
-            $lte: toDate,
-          },
-        });
-      }
+
+      // Adjust toDate to include the entire day by setting the time to the end of the day
+      toDate.setHours(23, 59, 59, 999);
+
+      // Construct query to match orders within the date range
+      this.query = this.query.find({
+        createdAt: {
+          $gte: fromDate,
+          $lte: toDate,
+        },
+      });
     }
-  
+
+    // Sort orders by createdAt field in descending order
     this.query = this.query.sort({ createdAt: -1 });
+
     return this;
   }
-  
 
   filter() {
     const queryStrCopy = { ...this.queryStr };
