@@ -275,6 +275,16 @@ export const resetPassword = async (req, res, next) => {
   user.resetPasswordTokenExpire = undefined;
   await user.save({ validateBeforeSave: false });
 
+  await sendEmail({
+    email: email,
+    subject: "VJP v",
+    template: "verifyRequest",
+    context: {
+      name: `${newUser?.fName} ${newUser?.lName}`,
+      verificationLink: activationLink,
+      BASE_URL: BASE_URL,
+    },
+  });
   sendToken(res, user, "Password reset successfully", SUCCESS);
 };
 
