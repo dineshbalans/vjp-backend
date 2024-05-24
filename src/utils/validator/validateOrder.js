@@ -5,4 +5,5 @@ export const validateCreateOrder = Joi.object().keys({
   user: Joi.string().required(),
   product: Joi.array().required(),
   paymentMethod: Joi.string().required(),
+  deliveryType: Joi.object().required(),
 });
