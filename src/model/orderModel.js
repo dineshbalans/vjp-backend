@@ -29,6 +29,14 @@ const orderSchema = new mongoose.Schema({
     type: String,
     default: "Processing",
   },
+  deliveryType: {
+    type: {
+      type: String,
+    },
+    additionalNotes: {
+      type: String,
+    },
+  },
   createdAt: {
     type: Date,
     default: Date.now,

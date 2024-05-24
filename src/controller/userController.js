@@ -210,6 +210,16 @@ export const forgotPassword = async (req, res, next) => {
 
   const resetUrl = `${BASE_URL}/user/password/reset/${resetToken}`;
 
+  await sendEmail({
+    email: email,
+    subject: "VJP Forgot Password Request",
+    template: "forgotPassword",
+    context: {
+      name: `${newUser?.fName} ${newUser?.lName}`,
+      resetLink: resetUrl,
+      BASE_URL: BASE_URL,
+    },
+  });
   try {
     res.status(200).json({
       success: true,
