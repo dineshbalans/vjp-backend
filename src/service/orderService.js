@@ -35,7 +35,6 @@ export const remove = async (id) => {
   return result;
 };
 
-
 export const getMyAllOrders = async (id) => {
   const result = await Order.find({ user: id })
     // .populate({
@@ -47,4 +46,4 @@ export const getMyAllOrders = async (id) => {
       model: "Item",
     });
   return result;
-}
+};
