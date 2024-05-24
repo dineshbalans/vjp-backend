@@ -62,10 +62,18 @@ const userSchema = new mongoose.Schema({
   resetPasswordToken: String,
   resetPasswordTokenExpire: Date,
 
+  
   createdAt: {
     type: Date,
-    default: Date.now,
-  },
+    default: () => {
+      const date = new Date();
+      // Get the timezone offset for Indian Standard Time (IST) in milliseconds
+      const timeZoneOffset = 5.5 * 60 * 60 * 1000; // IST is UTC+5:30
+      // Apply the offset to the current date
+      const indianDate = new Date(date.getTime() + timeZoneOffset);
+      return indianDate;
+    }
+  }
 });
 
 userSchema.pre("save", async function (next) {
