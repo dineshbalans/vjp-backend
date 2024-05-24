@@ -46,18 +46,7 @@ const itemSchema = mongoose.Schema({
     type: Number,
     required: true,
   },
-  // highlights: [
-  //   {
-  //     key: {
-  //       type: String,
-  //       required: true,
-  //     },
-  //     value: {
-  //       type: String,
-  //       required: true,
-  //     },
-  //   },
-  // ],
+
   highlights: {
     type: String,
   },

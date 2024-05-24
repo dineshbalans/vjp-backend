@@ -25,7 +25,20 @@ export const CreateOrder = async (req, res, next) => {
 
   const order = await add(orderData);
 
+  console.log(order);
+
   if (order) {
+    await sendEmail({
+      email: email,
+      subject: "Order Confirmation",
+      template: "orderConfirmed",
+      context: {
+        name: `${newUser?.fName} ${newUser?.lName}`,
+        order: order,
+        BASE_URL: BASE_URL,
+      },
+    });
+
     return next(new AppSuccess(order, "Order created successfully", SUCCESS));
   } else {
     return next(new AppError("Something went wrong", BADREQUEST));
