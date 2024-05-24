@@ -99,11 +99,17 @@ export const updateOrder = async (req, res, next) => {
 export const getOrders = async (req, res, next) => {
   const resPerPage = 12;
 
-  let buildQuery = () => {
-    return new APIFeatures(Order.find(), req.query).search().sortWithDate();
+  let buildQuery = (req) => {
+    return new APIFeatures(
+      Order.find().populate({
+        path: 'user',
+        select: 'email' // Only populate the email field of the user
+      }), 
+      req.query
+    ).search().sortWithDate();
   };
-
-  const filterdOrdersCount = await buildQuery().query.countDocuments();
+  
+  const filterdOrdersCount = await buildQuery(req).query.countDocuments();
 
   const totalOrdersCount = await Order.countDocuments({});
 
@@ -113,7 +119,7 @@ export const getOrders = async (req, res, next) => {
     ordersCount = filterdOrdersCount;
   }
 
-  const orders = await buildQuery().paginate(resPerPage).query;
+  const orders = await buildQuery(req).paginate(resPerPage).query;
 
   if (orders) {
     return next(
@@ -127,3 +133,4 @@ export const getOrders = async (req, res, next) => {
     return next(new AppError("Something went wrong", BADREQUEST));
   }
 };
+
