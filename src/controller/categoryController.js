@@ -55,7 +55,7 @@ export const updateCategory = async (req, res, next) => {
     return next(
       new AppSuccess(category, "Category Updated successfully", SUCCESS)
     );
-  } else {
+  } else{
     return next(new AppError("Something went wrong", BADREQUEST));
   }
 };
