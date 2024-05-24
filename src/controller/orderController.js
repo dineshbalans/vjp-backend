@@ -74,7 +74,7 @@ export const getMyOrders = async (req, res, next) => {
 
   const orders = await getMyAllOrders(id);
   if (orders) {
-    return next(new AppSuccess(orders, "orders data", SUCCESS));
+    return next(new AppSuccess(orders.reverse(), "orders data", SUCCESS));
   } else {
     return next(new AppError("Something went wrong", BADREQUEST));
   }
