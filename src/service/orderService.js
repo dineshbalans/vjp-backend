@@ -4,6 +4,7 @@ export const add = async (data) => {
   return result;
 };
 
+// Admin
 export const getAll = async () => {
   const result = await Order.find({})
     .populate({
@@ -13,6 +14,21 @@ export const getAll = async () => {
     .populate({
       path: "product.item",
       model: "Item",
+    });
+  return result;
+};
+
+export const getAdminOne = async (id) => {
+  const result = await Order.findOne({ _id: id })
+    .populate({
+      path: "user",
+      model: "User",
+      select: "fName lName email cmpny strtAddrss city state zipCode phNum",
+    })
+    .populate({
+      path: "product.item",
+      model: "Item",
+      select: "itemTitle ",
     });
   return result;
 };
