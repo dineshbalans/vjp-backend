@@ -5,6 +5,7 @@ import AppError from "../utils/response-handlers/app-error.js";
 import { validateCreateOrder } from "./../utils/validator/validateOrder.js";
 import {
   add,
+  getAdminOne,
   getAll,
   getMyAllOrders,
   getOne,
@@ -81,6 +82,23 @@ export const getMyOrders = async (req, res, next) => {
 };
 
 // Admin
+
+
+
+
+export const getAdminOrder = async (req, res, next) => {
+  const { id } = req.params;
+  if (_.isEmpty(id)) {
+    return next(new AppError("Order id is required", BADREQUEST));
+  }
+  const order = await getAdminOne(id);
+
+  if (order) {
+    return next(new AppSuccess(order, "Order successfully Send", SUCCESS));
+  } else {
+    return next(new AppError("Something went wrong", BADREQUEST));
+  }
+};
 
 export const updateOrder = async (req, res, next) => {
   const { id } = req.params;
