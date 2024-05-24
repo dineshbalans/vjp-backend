@@ -51,6 +51,10 @@ export default async function sendEmail(options) {
       extName: ".hbs",
       partialsDir: path.resolve("./views/"),
       defaultLayout: false,
+      runtimeOptions: {
+        allowProtoPropertiesByDefault: true,
+        allowProtoMethodsByDefault: true,
+      },
     },
     viewPath: path.resolve("./views/"),
     extName: ".hbs",

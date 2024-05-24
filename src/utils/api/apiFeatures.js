@@ -30,11 +30,12 @@ class APIFeatures {
 
   sortWithDate() {
     if (this.queryStr.from && this.queryStr.to) {
-      const parts = this.queryStr.from.split("-");
-      const fromDate = new Date(parts[2], parts[1] - 1, parts[0]);
-
-      const toDate = new Date(this.queryStr.to);
-
+      const fromParts = this.queryStr.from.split("-");
+      const fromDate = new Date(fromParts[0], fromParts[1] - 1, fromParts[2]);
+  
+      const toParts = this.queryStr.to.split("-");
+      const toDate = new Date(toParts[0], toParts[1] - 1, toParts[2]);
+  
       if (fromDate < toDate) {
         this.query = this.query.find({
           createdAt: {
@@ -44,10 +45,11 @@ class APIFeatures {
         });
       }
     }
-
+  
     this.query = this.query.sort({ createdAt: -1 });
     return this;
   }
+  
 
   filter() {
     const queryStrCopy = { ...this.queryStr };
