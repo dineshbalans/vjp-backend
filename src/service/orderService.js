@@ -23,7 +23,7 @@ export const getAdminOne = async (id) => {
     .populate({
       path: "user",
       model: "User",
-      select: "fName lName email cmpny strtAddrss city state zipCode phNum",
+      select: "fName lName email cmpny cntry strtAddrss city state zipCode phNum",
     })
     .populate({
       path: "product.item",
