@@ -10,11 +10,13 @@ import AppError from "../utils/response-handlers/app-error.js";
 import _ from "lodash";
 import jwt from "jsonwebtoken";
 import AppSuccess from "./../utils/response-handlers/app-success.js";
+import { getAll } from "../service/orderService.js";
 export const getDashboard = async (req, res, next) => {
   try {
     const categories = await getAllCategories();
     const items = await getItems();
     const users = await getAllUsers();
+    const orders = await getAll();
 
     return next(
       new AppSuccess(
@@ -22,6 +24,7 @@ export const getDashboard = async (req, res, next) => {
           categoriesCount: categories.length,
           itemsCount: items.length,
           usersCount: users.length,
+          ordersCount: orders.length, 
         },
         "Dashboard Data successfully Send",
         SUCCESS
@@ -139,12 +142,12 @@ export const getAdminProfile = async (req, res, next) => {
     return next(new AppError("Invalid or expired token", BADREQUEST));
   }
 };
- 
+
 export const logoutAdmin = async (req, res, next) => {
   // res.cookie("at", null, {
   //   expires: new Date(Date.now()),
   //   httpOnly: true,
-  // });  
+  // });
 
   const options = {
     expires: new Date(Date.now()),
