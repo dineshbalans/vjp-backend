@@ -2,7 +2,10 @@ import _ from "lodash";
 import AppSuccess from "../utils/response-handlers/app-success.js";
 import { BADREQUEST, SUCCESS } from "../utils/constants/statusCode.js";
 import AppError from "../utils/response-handlers/app-error.js";
-import { validateCreateOrder } from "./../utils/validator/validateOrder.js";
+import {
+  validateCreateOrder,
+  validateUpdateOrder,
+} from "./../utils/validator/validateOrder.js";
 import {
   add,
   getAdminOne,
@@ -42,7 +45,7 @@ export const CreateOrder = async (req, res, next) => {
         order: order,
         BASE_URL: BASE_URL,
         user: user,
-        count: order.product.length
+        count: order.product.length,
       },
     });
 
@@ -83,9 +86,6 @@ export const getMyOrders = async (req, res, next) => {
 
 // Admin
 
-
-
-
 export const getAdminOrder = async (req, res, next) => {
   const { id } = req.params;
   if (_.isEmpty(id)) {
@@ -101,6 +101,13 @@ export const getAdminOrder = async (req, res, next) => {
 };
 
 export const updateOrder = async (req, res, next) => {
+  const { error } = validateUpdateOrder.validate(req.body);
+
+  if (error) {
+    console.log("invalid request " + error.message);
+    return next(new AppError("Something went wrong", BADREQUEST));
+  }
+
   const { id } = req.params;
   if (_.isEmpty(id)) {
     return next(new AppError("Order id is required", BADREQUEST));
@@ -120,13 +127,15 @@ export const getOrders = async (req, res, next) => {
   let buildQuery = (req) => {
     return new APIFeatures(
       Order.find().populate({
-        path: 'user',
-        select: 'email' // Only populate the email field of the user
-      }), 
+        path: "user",
+        select: "email", // Only populate the email field of the user
+      }),
       req.query
-    ).search().sortWithDate();
+    )
+      .search()
+      .sortWithDate();
   };
-  
+
   const filterdOrdersCount = await buildQuery(req).query.countDocuments();
 
   const totalOrdersCount = await Order.countDocuments({});
@@ -151,4 +160,3 @@ export const getOrders = async (req, res, next) => {
     return next(new AppError("Something went wrong", BADREQUEST));
   }
 };
-

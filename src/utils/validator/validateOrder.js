@@ -7,3 +7,7 @@ export const validateCreateOrder = Joi.object().keys({
   paymentMethod: Joi.string().required(),
   deliveryType: Joi.object().required(),
 });
+
+export const validateUpdateOrder = Joi.object().keys({
+  status: Joi.string().required(),
+});
