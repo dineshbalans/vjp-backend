@@ -72,7 +72,10 @@ export const updateUser = async (req, res, next) => {
     return next(new AppError("User id is required", BADREQUEST));
   }
 
-  const user = await update(id, req.body);
+  const userId = await update(id, req.body);
+
+  const user = await getOne(userId?._id);
+  // const
   if (user) {
     return next(new AppSuccess(user, "User Updated successfully", SUCCESS));
   } else {
