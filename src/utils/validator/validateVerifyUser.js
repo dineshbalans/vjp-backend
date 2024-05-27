@@ -7,7 +7,6 @@ export const validateVerifyUser = Joi.object({
   }),
   pswd: Joi.string()
     .min(8)
-    .max(16)
     .pattern(new RegExp('^(?=.*[0-9])(?=.*[!@#$%^&*])'))
     .required()
     .messages({
