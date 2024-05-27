@@ -145,6 +145,13 @@ export const deleteUser = async (req, res, next) => {
   }
 };
 
+function generateToken(email) {
+  const token = jwt.sign({ email }, process.env.SIGNUP_SECRET_TOKEN, {
+    expiresIn: "1h",
+  });
+  return token;
+}
+
 export const updateEmailOrPassword = async (req, res, next) => {
   try {
     const user = await getOneWP(req.user._id);
@@ -155,13 +162,17 @@ export const updateEmailOrPassword = async (req, res, next) => {
     }
 
     if (type === "EmailAndPassword") {
-      
       const { email, pswd, newPassword, confirmPassword } = req.body;
 
       const alreadyExists = await registerCheck(email);
       if (alreadyExists) {
         return next(new AppError("User Email already exists", BADREQUEST));
       }
+
+      //  generate token
+
+      // const token = generateToken(email);
+      // req.body.token = token;
 
       if (await user.isValidPassword(pswd)) {
         if (newPassword !== confirmPassword) {
