@@ -3,7 +3,6 @@ import Joi from "joi";
 export const validateResetPassword = Joi.object().keys({
   password: Joi.string()
     .min(8)
-    .max(16)
     .pattern(new RegExp("^(?=.*[0-9])(?=.*[!@#$%^&*])"))
     .required()
     .messages({

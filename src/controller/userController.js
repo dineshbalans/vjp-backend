@@ -36,7 +36,7 @@ export const CreateUser = async (req, res, next) => {
 
   if (error) {
     console.log("invalid request " + error.message);
-    return next(new AppError("Something went wrong", BADREQUEST));
+    return next(new AppError(error.message, BADREQUEST));
   }
 
   let userData = req.body;
