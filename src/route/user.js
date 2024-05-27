@@ -42,7 +42,7 @@ router
   .put(isAuthenticatedUser, updateEmailOrPassword);
 
 router.route("/user/password/forgot").post(forgotPassword);
-router.route("/user/password/reset/:token").get(resetPassword);
+router.route("/user/password/reset/:token").post(resetPassword);
 
 router
   .route("/user/wishlist/:productId")
