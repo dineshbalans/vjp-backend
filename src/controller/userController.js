@@ -358,8 +358,6 @@ export const resetPassword = async (req, res, next) => {
     template: "resetSuccess",
     context: {
       name: `${user?.fName} ${user?.lName}`,
-     
-      BASE_URL: BASE_URL,
     },
   });
   sendToken(res, user, "Password reset successfully", SUCCESS);
