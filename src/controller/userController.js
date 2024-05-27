@@ -230,7 +230,26 @@ export const updateEmailOrPassword = async (req, res, next) => {
     }
 
     await user.save();
-    return next(new AppSuccess(user, "User updated successfully", SUCCESS));
+
+    const options = {
+      expires: new Date(Date.now()),
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax", // Adjust SameSite attribute based on environment
+    };
+
+    res.cookie("vjpuser", null, options);
+
+    return next(
+      new AppSuccess(
+        {
+          success: true,
+          user: false,
+        },
+        "User updated successfully",
+        SUCCESS
+      )
+    );
   } catch (err) {
     return next(new AppError(err.message, BADREQUEST));
   }
