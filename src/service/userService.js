@@ -42,7 +42,7 @@ export const getOneWP = async (id) => {
 };
 
 export const update = async (id, data) => {
-  const result = await User.updateOne({ _id: id }, data, {
+  const result = await User.findByIdAndUpdate({ _id: id }, data, {
     new: true,
     runValidators: true,
   });
