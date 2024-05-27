@@ -151,46 +151,65 @@ export const updateEmailOrPassword = async (req, res, next) => {
     const { type } = req.body;
 
     if (!user) {
-      return next(new AppError("User Not exists", BADREQUEST));
+      return next(new AppError("User does not exist", BADREQUEST));
     }
 
-    if (type === "email") {
+    if (type === "EmailAndPassword") {
+      
+      const { email, pswd, newPassword, confirmPassword } = req.body;
+
+      const alreadyExists = await registerCheck(email);
+      if (alreadyExists) {
+        return next(new AppError("User Email already exists", BADREQUEST));
+      }
+
+      if (await user.isValidPassword(pswd)) {
+        if (newPassword !== confirmPassword) {
+          return next(
+            new AppError(
+              "Password and confirm password do not match",
+              BADREQUEST
+            )
+          );
+        }
+
+        user.email = email;
+        user.pswd = newPassword;
+      } else {
+        return next(new AppError("Invalid Password", BADREQUEST));
+      }
+    } else if (type === "email") {
       const { email } = req.body;
 
-      let alreadyExists = await registerCheck(req.body.email);
+      const alreadyExists = await registerCheck(email);
       if (alreadyExists) {
         return next(new AppError("User Email already exists", BADREQUEST));
       }
 
       user.email = email;
-      await user.save();
-    }
-
-    if (type === "password") {
+    } else if (type === "password") {
       const { pswd, newPassword, confirmPassword } = req.body;
 
       if (await user.isValidPassword(pswd)) {
         if (newPassword !== confirmPassword) {
           return next(
             new AppError(
-              "Password and confirm password does not match",
+              "Password and confirm password do not match",
               BADREQUEST
             )
           );
         }
 
         user.pswd = newPassword;
-        await user.save();
       } else {
-        return next(new AppError("Invalid Email or Password", BADREQUEST));
+        return next(new AppError("Invalid Password", BADREQUEST));
       }
+    } else {
+      return next(new AppError("Invalid update type", BADREQUEST));
     }
 
-    if (user) {
-      return next(new AppSuccess(user, "User Updated successfully", SUCCESS));
-    } else {
-      return next(new AppError("Something went wrong", BADREQUEST));
-    }
+    await user.save();
+    return next(new AppSuccess(user, "User updated successfully", SUCCESS));
   } catch (err) {
     return next(new AppError(err.message, BADREQUEST));
   }
