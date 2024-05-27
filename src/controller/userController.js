@@ -316,6 +316,8 @@ export const resetPassword = async (req, res, next) => {
     );
   }
 
+
+
   const { error } = validateResetPassword.validate(req.body);
 
   if (error) {
@@ -341,6 +343,13 @@ export const resetPassword = async (req, res, next) => {
     );
   }
 
+    // isValidPassword
+
+    if (await user.isValidPassword(password)) {
+      return next(new AppError("Your New Password cannot be same as old", BADREQUEST));
+    }
+  
+
   if (req.body.password !== req.body.confirmPassword) {
     return next(
       new AppError("Password and confirm password does not match", BADREQUEST)
@@ -358,8 +367,6 @@ export const resetPassword = async (req, res, next) => {
     template: "resetSuccess",
     context: {
       name: `${user?.fName} ${user?.lName}`,
-     
-      BASE_URL: BASE_URL,
     },
   });
   sendToken(res, user, "Password reset successfully", SUCCESS);
