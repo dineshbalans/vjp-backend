@@ -262,6 +262,11 @@ export const forgotPassword = async (req, res, next) => {
     return next(new AppError("Email is required", BADREQUEST));
   }
   const user = await getOneByEmail(email);
+  // const user = await User.findOne({ email: email });
+  console.log(email)
+  // const user = await User.findOne({ email: { $regex: new RegExp(`^${email}$`, 'i') } });
+
+  console.log(user)
 
   if (!user) {
     return next(new AppError("Email not found", BADREQUEST));
@@ -279,7 +284,7 @@ export const forgotPassword = async (req, res, next) => {
     subject: "VJP Forgot Password Request",
     template: "forgotPassword",
     context: {
-      name: `${newUser?.fName} ${newUser?.lName}`,
+      name: `${user?.fName} ${user?.lName}`,
       resetLink: resetUrl,
       BASE_URL: BASE_URL,
     },

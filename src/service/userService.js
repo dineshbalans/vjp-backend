@@ -21,18 +21,21 @@ export const getAll = async () => {
 };
 
 export const getOne = async (id) => {
-  console.log(id)
+  console.log(id);
   const result = await User.findById(id).populate("wishList");
   return result;
 };
 
 export const getProfile = async (email) => {
   console.log(id, "id fron get one user service");
-  const result = await User.findOne({ email: email }).populate("wishList"); 
+  const result = await User.findOne({ email: email }).populate("wishList");
   return result;
 };
-export const getOneByEmail = async (email) => {
-  const result = await User.findOne({ email: email });
+export const getOneByEmail = async (emailId) => {
+  console.log(typeof emailId);
+  // const result = await User.findOne({ email: email });
+  const result = await User.findOne({ email: emailId}).populate("wishList");
+  console.log(result)
   return result;
 };
 
