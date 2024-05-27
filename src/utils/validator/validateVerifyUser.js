@@ -1,14 +1,22 @@
-import Joi from "joi";
+import Joi from 'joi';
 
 export const validateVerifyUser = Joi.object({
   email: Joi.string().required().messages({
     "any.required": "Email cannot be empty.",
     "string.empty": "Email cannot be empty.",
   }),
-  pswd: Joi.string().required().messages({
-    "any.required": "Password cannot be empty.",
-    "string.empty": "Password cannot be empty.",
-  }),
+  pswd: Joi.string()
+    .min(8)
+    .max(16)
+    .pattern(new RegExp('^(?=.*[0-9])(?=.*[!@#$%^&*])'))
+    .required()
+    .messages({
+      "any.required": "Password cannot be empty.",
+      "string.empty": "Password cannot be empty.",
+      "string.min": "Password must be at least 8 characters long.",
+      "string.max": "Password must be at most 16 characters long.",
+      "string.pattern.base": "Password must contain at least one special character and one number.",
+    }),
   gstNum: Joi.string().required().messages({
     "any.required": "GST number cannot be empty.",
     "string.empty": "GST number cannot be empty.",
@@ -48,13 +56,8 @@ export const validateVerifyUser = Joi.object({
   phNum: Joi.string().trim().min(10).max(10).required().messages({
     "any.required": "Phone number cannot be empty.",
     "string.empty": "Phone number cannot be empty.",
-    "string.min": "Phone number should have a minimum length of {10}.",
-    "string.max": "Phone number should have a maximum length of {10}.",
+    "string.min": "Phone number should have a minimum length of 10.",
+    "string.max": "Phone number should have a maximum length of 10.",
     "string.base": "Phone number should be a type of 'text'.",
   }),
 });
-
-// 'string.base': "a" should be a type of 'text',
-//       'string.empty': "a" cannot be an empty field,
-//       'string.min': "a" should have a minimum length of {#limit},
-//       'any.required': "a" is a required field
