@@ -319,7 +319,7 @@ export const resetPassword = async (req, res, next) => {
   const { error } = validateResetPassword.validate(req.body);
 
   if (error) {
-    return next(new AppError("Something went wrong", BADREQUEST));
+    return next(new AppError(error.message, BADREQUEST));
   }
 
   const resetPasswordToken = crypto
