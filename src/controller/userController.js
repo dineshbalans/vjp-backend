@@ -22,6 +22,7 @@ import sendToken from "../utils/response-handlers/sendToken.js";
 import User from "../model/userModel.js";
 import crypto from "crypto";
 import validateUpdatePassAndEmail from "../utils/validator/validateupdatePassAndEmail.js";
+import sendEmail from "../utils/mail/sendEmail.js";
 
 export const CreateUser = async (req, res, next) => {
   let alreadyExists = await registerCheck(req.body.email);
@@ -272,7 +273,6 @@ export const forgotPassword = async (req, res, next) => {
   let BASE_URL = `${req.protocol}://${req.get("host")}`;
 
   const resetUrl = `${BASE_URL}/user/password/reset/${resetToken}`;
-
   await sendEmail({
     email: email,
     subject: "VJP Forgot Password Request",
