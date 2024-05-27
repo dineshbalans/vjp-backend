@@ -1,6 +1,7 @@
-import Joi from "joi";
+import Joi, { types } from "joi";
 
 export const validateUpdatePassAndEmail = Joi.object().keys({
+  type: Joi.string().required(),
   pswd: Joi.string().required().messages({
     "any.required": "Current Password cannot be empty.",
     "string.empty": "Current Password cannot be empty.",
