@@ -182,7 +182,7 @@ export const updateEmailOrPassword = async (req, res, next) => {
         if (newPassword !== confirmPassword) {
           return next(
             new AppError(
-              "Password and confirm password do not match",
+              "New Password and confirm password do not match",
               BADREQUEST
             )
           );
@@ -215,7 +215,7 @@ export const updateEmailOrPassword = async (req, res, next) => {
         if (newPassword !== confirmPassword) {
           return next(
             new AppError(
-              "Password and confirm password do not match",
+              "New Password and confirm password do not match",
               BADREQUEST
             )
           );
