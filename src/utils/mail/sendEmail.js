@@ -28,7 +28,6 @@
 //   });
 // }
 
-
 import nodemailer from "nodemailer";
 import nodemailerHbs from "nodemailer-express-handlebars";
 import path from "path";
@@ -42,6 +41,9 @@ export default async function sendEmail(options) {
     auth: {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS,
+    },
+    tls: {
+      rejectUnauthorized: false, // This option allows self-signed certificates
     },
   });
 
