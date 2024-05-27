@@ -263,10 +263,10 @@ export const forgotPassword = async (req, res, next) => {
   }
   const user = await getOneByEmail(email);
   // const user = await User.findOne({ email: email });
-  console.log(email)
+  console.log(email);
   // const user = await User.findOne({ email: { $regex: new RegExp(`^${email}$`, 'i') } });
 
-  console.log(user)
+  console.log(user);
 
   if (!user) {
     return next(new AppError("Email not found", BADREQUEST));
@@ -277,7 +277,8 @@ export const forgotPassword = async (req, res, next) => {
 
   let BASE_URL = `${req.protocol}://${req.get("host")}`;
 
-  const resetUrl = `${BASE_URL}/user/password/reset/${resetToken}`;
+  const resetUrl = `${process.env.FRONTEND_URL}/password/reset/${resetToken}`;
+
   await sendEmail({
     email: email,
     subject: "VJP Forgot Password Request",
@@ -313,6 +314,13 @@ export const resetPassword = async (req, res, next) => {
       )
     );
   }
+
+  const { error } = validateResetPassword.validate(req.body);
+
+  if (error) {
+    return next(new AppError("Something went wrong", BADREQUEST));
+  }
+
   const resetPasswordToken = crypto
     .createHash("sha256")
     .update(req.params.token)
