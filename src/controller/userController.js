@@ -21,6 +21,7 @@ import { getOne as getItem } from "../service/itemService.js";
 import sendToken from "../utils/response-handlers/sendToken.js";
 import User from "../model/userModel.js";
 import crypto from "crypto";
+import validateUpdatePassAndEmail from "../utils/validator/validateupdatePassAndEmail.js";
 
 export const CreateUser = async (req, res, next) => {
   let alreadyExists = await registerCheck(req.body.email);
@@ -202,6 +203,12 @@ export const updateEmailOrPassword = async (req, res, next) => {
 
       user.email = email;
     } else if (type === "password") {
+      const { error } = validateUpdatePassAndEmail.validate(req.body);
+
+      if (error) {
+        return next(new AppError(error.message, BADREQUEST));
+      }
+
       const { pswd, newPassword, confirmPassword } = req.body;
 
       if (await user.isValidPassword(pswd)) {
