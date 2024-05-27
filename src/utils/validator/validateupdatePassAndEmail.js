@@ -1,10 +1,6 @@
 import Joi from "joi";
 
 export const validateUpdatePassAndEmail = Joi.object().keys({
-  email: Joi.string().required().messages({
-    "any.required": "Email cannot be empty.",
-    "string.empty": "Email cannot be empty.",
-  }),
   pswd: Joi.string().required().messages({
     "any.required": "Password cannot be empty.",
     "string.empty": "Password cannot be empty.",
