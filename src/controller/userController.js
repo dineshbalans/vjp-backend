@@ -148,13 +148,15 @@ export const deleteUser = async (req, res, next) => {
 export const updateEmailOrPassword = async (req, res, next) => {
   try {
     const user = await getOneWP(req.user._id);
-    const { type, email, pswd, newPassword, confirmPassword } = req.body;
+    const { type } = req.body;
 
     if (!user) {
       return next(new AppError("User Not exists", BADREQUEST));
     }
 
     if (type === "email") {
+      const { email } = req.body;
+
       let alreadyExists = await registerCheck(req.body.email);
       if (alreadyExists) {
         return next(new AppError("User Email already exists", BADREQUEST));
@@ -165,6 +167,8 @@ export const updateEmailOrPassword = async (req, res, next) => {
     }
 
     if (type === "password") {
+      const { pswd, newPassword, confirmPassword } = req.body;
+
       if (await user.isValidPassword(pswd)) {
         if (newPassword !== confirmPassword) {
           return next(
