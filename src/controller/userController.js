@@ -316,8 +316,6 @@ export const resetPassword = async (req, res, next) => {
     );
   }
 
-
-
   const { error } = validateResetPassword.validate(req.body);
 
   if (error) {
@@ -343,13 +341,14 @@ export const resetPassword = async (req, res, next) => {
     );
   }
 
-    // isValidPassword
+  // isValidPassword
 
-    if (await user.isValidPassword(req.body.password)) {
-      console.log("Password cannot be same as old password");
-      return next(new AppError("Your New Password cannot be same as old", BADREQUEST));
-    }
-  
+  if (await user.isValidPassword(req.body.password)) {
+    console.log("Password cannot be same as old password");
+    return next(
+      new AppError("Your New Password cannot be same as old", BADREQUEST)
+    );
+  }
 
   if (req.body.password !== req.body.confirmPassword) {
     return next(
@@ -362,15 +361,39 @@ export const resetPassword = async (req, res, next) => {
   user.resetPasswordTokenExpire = undefined;
   await user.save({ validateBeforeSave: false });
 
+  //  logout user
+
+  const options = {
+    expires: new Date(Date.now()),
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax", // Adjust SameSite attribute based on environment
+  };
+
+  res.cookie("vjpuser", null, options);
+
   await sendEmail({
     email: user.email,
-    subject: "VJP Verification Successful",
+    subject: "VJP Password Reset Successful",
     template: "resetSuccess",
     context: {
       name: `${user?.fName} ${user?.lName}`,
     },
   });
-  sendToken(res, user, "Password reset successfully", SUCCESS);
+  // sendToken(res,  {
+  //       success: true,
+  //       user: false,
+  //     }, "Password reset successfully", SUCCESS);
+  return next(
+    new AppSuccess(
+      {
+        success: true,
+        user: false,
+      },
+      "User updated successfully",
+      SUCCESS
+    )
+  );
 };
 
 export const wishListAddOrRemove = async (req, res, next) => {
