@@ -353,12 +353,12 @@ export const resetPassword = async (req, res, next) => {
   await user.save({ validateBeforeSave: false });
 
   await sendEmail({
-    email: email,
+    email: user.email,
     subject: "VJP Verification Successful",
     template: "resetSuccess",
     context: {
-      name: `${newUser?.fName} ${newUser?.lName}`,
-      // verificationLink: activationLink,
+      name: `${user?.fName} ${user?.lName}`,
+     
       BASE_URL: BASE_URL,
     },
   });
