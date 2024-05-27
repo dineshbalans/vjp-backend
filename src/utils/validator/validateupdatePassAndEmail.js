@@ -1,4 +1,4 @@
-import Joi, { types } from "joi";
+import Joi from "joi";
 
 export const validateUpdatePassAndEmail = Joi.object().keys({
   type: Joi.string().required(),
