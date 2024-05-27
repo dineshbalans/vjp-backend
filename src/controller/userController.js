@@ -223,7 +223,7 @@ export const updateEmailOrPassword = async (req, res, next) => {
 
         user.pswd = newPassword;
       } else {
-        return next(new AppError("Invalid Password", BADREQUEST));
+        return next(new AppError("Current Password is Invalid", BADREQUEST));
       }
     } else {
       return next(new AppError("Invalid update type", BADREQUEST));
