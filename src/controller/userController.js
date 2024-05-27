@@ -316,6 +316,8 @@ export const resetPassword = async (req, res, next) => {
     );
   }
 
+
+
   const { error } = validateResetPassword.validate(req.body);
 
   if (error) {
@@ -330,7 +332,7 @@ export const resetPassword = async (req, res, next) => {
   const user = await User.findOne({
     resetPasswordToken,
     resetPasswordTokenExpire: { $gt: Date.now() },
-  });
+  }).select("+pswd");
 
   if (!user) {
     return next(
@@ -340,6 +342,14 @@ export const resetPassword = async (req, res, next) => {
       )
     );
   }
+
+    // isValidPassword
+
+    if (await user.isValidPassword(req.body.password)) {
+      console.log("Password cannot be same as old password");
+      return next(new AppError("Your New Password cannot be same as old", BADREQUEST));
+    }
+  
 
   if (req.body.password !== req.body.confirmPassword) {
     return next(
