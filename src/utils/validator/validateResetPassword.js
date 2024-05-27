@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-export const validateResetPassword = Joi.object({
+export const validateResetPassword = Joi.object().keys({
   password: Joi.string()
     .min(8)
     .max(16)
