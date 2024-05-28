@@ -66,6 +66,8 @@ export const loginUser = async (req, res, next) => {
     return next(new AppError("Invalid Email or Password", BADREQUEST));
   }
 
+  
+
   sendToken(res, user, "User logged in successfully", SUCCESS);
 };
 
