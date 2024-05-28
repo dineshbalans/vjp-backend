@@ -1,4 +1,3 @@
- 
 class APIFeatures {
   constructor(query, queryStr) {
     this.query = query;
@@ -16,40 +15,6 @@ class APIFeatures {
     }
     return this;
   }
-
-  // basedSubcategorySearch() {
-  //   if (this.queryStr.subcategory) {
-  //     this.query = this.query.find({
-  //       subcategory: {
-  //         $regex: this.queryStr.subcategory,
-  //         $options: "i",
-  //       },
-  //     });
-  //   }
-  //   return this;
-  // }
-
-  // sortWithDate() {
-  //   if (this.queryStr.from && this.queryStr.to) {
-  //     const fromParts = this.queryStr.from.split("-");
-  //     const fromDate = new Date(fromParts[0], fromParts[1] - 1, fromParts[2]);
-
-  //     const toParts = this.queryStr.to.split("-");
-  //     const toDate = new Date(toParts[0], toParts[1] - 1, toParts[2]);
-
-  //     if (fromDate < toDate) {
-  //       this.query = this.query.find({
-  //         createdAt: {
-  //           $gte: fromDate,
-  //           $lte: toDate,
-  //         },
-  //       });
-  //     }
-  //   }
-
-  //   this.query = this.query.sort({ createdAt: -1 });
-  //   return this;
-  // }
 
   sortWithDate() {
     if (this.queryStr.from && this.queryStr.to) {

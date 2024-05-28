@@ -16,16 +16,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const router = Router();
 
-// const upload = multer({
-//   storage: multer.diskStorage({
-//     destination: function (req, file, cb) {
-//       cb(null, path.join(__dirname, "..", "uploads/item"));
-//     },
-//     filename: function (req, file, cb) {
-//       cb(null, file.originalname);
-//     },
-//   }),
-// })
+ 
 
 const createDirectory = (dirPath) => {
   if (!fs.existsSync(dirPath)) {
