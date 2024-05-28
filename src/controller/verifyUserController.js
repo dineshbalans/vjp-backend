@@ -26,14 +26,12 @@ export const verifyUser = async (req, res, next) => {
     const { error } = validateVerifyUser.validate(req.body);
 
     if (error) {
-      console.log("Invalid request: " + error.message);
       return next(new AppError(error.message, BADREQUEST));
     }
 
-    const { email, fName, lName } = req.body;
+    const { email } = req.body;
 
     const alreadyExists = await verifyUserCheck(email);
-    console.log(alreadyExists, "alreadyExists");
 
     if (alreadyExists) {
       return next(new AppError("User already exists", BADREQUEST));
@@ -46,18 +44,9 @@ export const verifyUser = async (req, res, next) => {
     // Save the new user data
     const newUser = await add(req.body);
 
-    console.log(newUser);
-
     // Construct the activation link
     const BASE_URL = `${req.protocol}://${req.get("host")}`;
     const activationLink = `${BASE_URL}/api/v1/verify/${token}`;
-
-    // Send the verification email
-    // await sendEmail({
-    //   email: email,
-    //   subject: "VJP Email Verification Request",
-    //   html: verifyRequest(activationLink, fName, lName),
-    // });
 
     await sendEmail({
       email: email,
@@ -69,7 +58,6 @@ export const verifyUser = async (req, res, next) => {
         BASE_URL: BASE_URL,
       },
     });
-    console.log("Verification email sent to:", email);
 
     return next(
       new AppSuccess(
@@ -79,7 +67,6 @@ export const verifyUser = async (req, res, next) => {
       )
     );
   } catch (err) {
-    console.error("Error during user verification:", err);
     return next(new AppError(err.message || "An error occurred", BADREQUEST));
   }
 };
@@ -87,16 +74,6 @@ export const verifyUser = async (req, res, next) => {
 export const InsertUser = async (req, res, next) => {
   try {
     const response = await InsertUsertoUser(req.params.token, req, res, next);
-
-    // console.log('response :',response);
-    // if (response) {
-    //   return verifyedSuccess();
-    // }
-
-    // if (response) {
-    //   return res.status(200).json(new AppSuccess(response, "User successfully sent", 200));
-    // }
-    // return next(new AppSuccess(response, "User successfully sent", SUCCESS));
 
     const BASE_URL = `${req.protocol}://${req.get("host")}`;
 
@@ -129,12 +106,9 @@ const InsertUsertoUser = async (token, req, res, next) => {
   try {
     const verifyUser = await verifyUserToken(token);
 
-    console.log(verifyUser);
     if (!verifyUser) {
       return next(new AppError("Token expired or invalid", BADREQUEST));
     }
-
-    console.log("Verified user:", verifyUser);
 
     const user = await addUser({
       email: verifyUser.email,
@@ -151,28 +125,9 @@ const InsertUsertoUser = async (token, req, res, next) => {
       phNum: verifyUser.phNum,
     });
 
-    console.log("New user added:", user);
-
-    // const BASE_URL = `${req.protocol}://${req.get("host")}`;
-    // const activationLink = `${BASE_URL}/api/v1/activate/${token}`;
-    // await sendEmail({
-    //   email: verifyUser.email,
-    //   subject: "VJP Account Verification Success",
-    //   html: `
-    //     <h2>Account Verification Successful</h2>
-    //     <p>Thank you for verifying your account. Your account has been verified.</p>
-    //     <p>Please click the link below to activate your account:</p>
-    //   `,
-    // });
-
     await removeVerifyUser(token);
 
     return user;
-
-    // return `<h1>User ${user.email} successfully sent</h1>`;
-    // return next(
-    //   new AppSuccess(response, "User Verified successfully", SUCCESS)
-    // );
   } catch (err) {
     return next(new AppError(err.message, BADREQUEST));
   }

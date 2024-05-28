@@ -23,8 +23,7 @@ export const CreateOrder = async (req, res, next) => {
   const { error } = validateCreateOrder.validate(req.body);
 
   if (error) {
-    console.log("invalid request " + error.message);
-    return next(new AppError("Something went wrong", BADREQUEST));
+    return next(new AppError(error.message, BADREQUEST));
   }
 
   let orderData = req.body;
@@ -32,7 +31,6 @@ export const CreateOrder = async (req, res, next) => {
   const order = await add(orderData);
   let BASE_URL = `${req.protocol}://${req.get("host")}`;
 
-  console.log(order);
   const user = await getUser(order.user);
 
   if (order) {
@@ -104,8 +102,7 @@ export const updateOrder = async (req, res, next) => {
   const { error } = validateUpdateOrder.validate(req.body);
 
   if (error) {
-    console.log("invalid request " + error.message);
-    return next(new AppError("Something went wrong", BADREQUEST));
+    return next(new AppError(error.message, BADREQUEST));
   }
 
   const { id } = req.params;

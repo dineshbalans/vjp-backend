@@ -52,7 +52,5 @@ router
   .put(isAuthenticatedUser, clearAllWishList);
 
  
-
-// router.route("/user/update/:id").put(updateUser);
-
+ 
 export default router;

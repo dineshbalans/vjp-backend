@@ -35,7 +35,6 @@ export const CreateUser = async (req, res, next) => {
   const { error } = validateCreateUser.validate(req.body);
 
   if (error) {
-    console.log("invalid request " + error.message);
     return next(new AppError(error.message, BADREQUEST));
   }
 
@@ -65,8 +64,6 @@ export const loginUser = async (req, res, next) => {
   if (!(await user.isValidPassword(pswd))) {
     return next(new AppError("Invalid Email or Password", BADREQUEST));
   }
-
-  
 
   sendToken(res, user, "User logged in successfully", SUCCESS);
 };
@@ -265,11 +262,6 @@ export const forgotPassword = async (req, res, next) => {
     return next(new AppError("Email is required", BADREQUEST));
   }
   const user = await getOneByEmail(email);
-  // const user = await User.findOne({ email: email });
-  console.log(email);
-  // const user = await User.findOne({ email: { $regex: new RegExp(`^${email}$`, 'i') } });
-
-  console.log(user);
 
   if (!user) {
     return next(new AppError("Email not found", BADREQUEST));
@@ -346,7 +338,6 @@ export const resetPassword = async (req, res, next) => {
   // isValidPassword
 
   if (await user.isValidPassword(req.body.password)) {
-    console.log("Password cannot be same as old password");
     return next(
       new AppError("Your New Password cannot be same as old", BADREQUEST)
     );
