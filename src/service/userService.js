@@ -6,7 +6,9 @@ export const registerCheck = async (email) => {
 };
 
 export const loginCheck = async (email) => {
-  const result = await User.findOne({ email: email }).select("+pswd");
+  const result = await User.findOne({ email: email })
+    .select("+pswd")
+    .populate("wishList");
   return result;
 };
 
@@ -34,8 +36,8 @@ export const getProfile = async (email) => {
 export const getOneByEmail = async (emailId) => {
   console.log(typeof emailId);
   // const result = await User.findOne({ email: email });
-  const result = await User.findOne({ email: emailId}).populate("wishList");
-  console.log(result)
+  const result = await User.findOne({ email: emailId }).populate("wishList");
+  console.log(result);
   return result;
 };
 
