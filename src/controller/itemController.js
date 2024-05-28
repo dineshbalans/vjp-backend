@@ -3,7 +3,7 @@ import AppSuccess from "../utils/response-handlers/app-success.js";
 import { BADREQUEST, SUCCESS } from "../utils/constants/statusCode.js";
 import AppError from "../utils/response-handlers/app-error.js";
 import { validateCreateItem } from "../utils/validator/validateItem.js";
-import { add, getAll, getOne, remove, update } from "../service/itemService.js";
+import { add, getAll, getLatest, getOne, remove, update } from "../service/itemService.js";
 import Item from "../model/itemsModel.js";
 import { getOne as getCategory } from "../service/categotyService.js";
 import APIFeatures from "../utils/api/apiFeatures.js";
@@ -238,4 +238,13 @@ export const deleteItem = async (req, res, next) => {
   }
 
   return next(new AppSuccess(deletedItem, "Item Deleted successfully", 200));
+};
+
+export const getLatestItems = async (req, res, next) => {
+  const items = await getLatest();
+  if (items) {
+    return next(new AppSuccess(items, "Items successfully Send", SUCCESS));
+  } else {
+    return next(new AppError("Something went wrong", BADREQUEST));
+  }
 };

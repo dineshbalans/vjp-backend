@@ -4,6 +4,7 @@ import {
   deleteItem,
   getItem,
   getItems,
+  getLatestItems,
   updateItem,
 } from "../controller/itemController.js";
 import multer from "multer";
@@ -63,5 +64,6 @@ router.route("/item/delete/:id").delete(isAuthenticatedAdminUser, deleteItem);
 // common
 router.route("/items").get(getItems);
 router.route("/item/:id").get(getItem);
+router.route("/latest-items").get(getLatestItems);
 
 export default router;
