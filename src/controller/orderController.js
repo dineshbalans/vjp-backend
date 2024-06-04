@@ -18,6 +18,42 @@ import { getOne as getUser } from "../service/userService.js";
 import Order from "../model/orderModel.js";
 import APIFeatures from "../utils/api/apiFeatures.js";
 import sendEmail from "../utils/mail/sendEmail.js";
+import mongoose from "mongoose";
+import Item from "../model/itemsModel.js";
+
+// export const CreateOrder = async (req, res, next) => {
+//   const { error } = validateCreateOrder.validate(req.body);
+
+//   if (error) {
+//     return next(new AppError(error.message, BADREQUEST));
+//   }
+
+//   let orderData = req.body;
+
+//   const order = await add(orderData);
+//   let BASE_URL = `${req.protocol}://${req.get("host")}`;
+
+//   const user = await getUser(order.user);
+
+//   if (order) {
+//     await sendEmail({
+//       email: user.email,
+//       subject: "Order Confirmation",
+//       template: "orderConfirmed",
+//       context: {
+//         name: `${user?.fName} ${user?.lName}`,
+//         order: order,
+//         BASE_URL: BASE_URL,
+//         user: user,
+//         count: order.product.length,
+//       },
+//     });
+
+//     return next(new AppSuccess(order, "Order created successfully", SUCCESS));
+//   } else {
+//     return next(new AppError("Something went wrong", BADREQUEST));
+//   }
+// };
 
 export const CreateOrder = async (req, res, next) => {
   const { error } = validateCreateOrder.validate(req.body);
@@ -28,28 +64,64 @@ export const CreateOrder = async (req, res, next) => {
 
   let orderData = req.body;
 
-  const order = await add(orderData);
-  let BASE_URL = `${req.protocol}://${req.get("host")}`;
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
-  const user = await getUser(order.user);
+  try {
+    // Create the order
+    const order = await add(orderData, { session });
 
-  if (order) {
-    await sendEmail({
-      email: user.email,
-      subject: "Order Confirmation",
-      template: "orderConfirmed",
-      context: {
-        name: `${user?.fName} ${user?.lName}`,
-        order: order,
-        BASE_URL: BASE_URL,
-        user: user,
-        count: order.product.length,
-      },
-    });
+    // Update the stock for each item in the order
+    for (const product of order.product) {
+      const item = await Item.findById(product.item).session(session);
 
-    return next(new AppSuccess(order, "Order created successfully", SUCCESS));
-  } else {
-    return next(new AppError("Something went wrong", BADREQUEST));
+      if (!item) {
+        throw new AppError(
+          `Item with ID ${product.item} not found`,
+          BADREQUEST
+        );
+      }
+
+      if (item.stock < product.quantity) {
+        throw new AppError(
+          `Insufficient stock for item ${item.itemTitle}`,
+          BADREQUEST
+        );
+      }
+
+      item.stock -= product.quantity;
+      await item.save({ session });
+    }
+
+    await session.commitTransaction();
+    session.endSession();
+
+    let BASE_URL = `${req.protocol}://${req.get("host")}`;
+
+    const user = await getUser(order.user);
+
+    if (order) {
+      await sendEmail({
+        email: user.email,
+        subject: "Order Confirmation",
+        template: "orderConfirmed",
+        context: {
+          name: `${user?.fName} ${user?.lName}`,
+          order: order,
+          BASE_URL: BASE_URL,
+          user: user,
+          count: order.product.length,
+        },
+      });
+
+      return next(new AppSuccess(order, "Order created successfully", SUCCESS));
+    } else {
+      return next(new AppError("Something went wrong", BADREQUEST));
+    }
+  } catch (err) {
+    await session.abortTransaction();
+    session.endSession();
+    return next(new AppError(err.message, BADREQUEST));
   }
 };
 
