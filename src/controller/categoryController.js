@@ -48,7 +48,10 @@ export const updateCategory = async (req, res, next) => {
     return next(new AppError("Category id is required", BADREQUEST));
   }
 
+  let categoryName = req.body.title.toLowerCase().trim().split(" ").join("-");
+  req.body.category = categoryName;
   const category = await update(id, req.body);
+
   if (category) {
     return next(
       new AppSuccess(category, "Category Updated successfully", SUCCESS)
